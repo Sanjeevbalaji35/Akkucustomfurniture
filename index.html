@@ -32,10 +32,8 @@
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
-    body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-    }
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=300;400;500;600;700;800&display=swap');
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
   </style>
 </head>
 <body class="bg-[#FAF7F2] text-[#2D2A26] min-h-screen">
@@ -45,21 +43,21 @@
   <script type="text/babel">
     const { useState, useEffect, useRef } = React;
 
-    // --- Firebase Global Initializer ---
-    let auth, db;
+    // --- Firebase Initialization Engine ---
+    let auth, db, appId;
     try {
       const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
-      // Using compat layer to ensure smooth browser CDN execution
       if (firebaseConfig.apiKey) {
         firebase.initializeApp(firebaseConfig);
         auth = firebase.auth();
         db = firebase.firestore();
       }
+      appId = typeof __app_id !== 'undefined' ? __app_id : 'akku-furniture-app';
     } catch (error) {
-      console.error("Firebase startup check:", error);
+      console.error("Firebase Initialization Bypass:", error);
     }
 
-    // Dynamic Engine Icon Loader
+    // --- Dynamic Lucide Renderer for All 21 Requested Icons ---
     function LucideIcon({ name, size = 16, className = "" }) {
       const iconRef = useRef(null);
       useEffect(() => {
@@ -70,7 +68,7 @@
       return <i ref={iconRef} data-lucide={name} style={{ width: size, height: size }} className={`inline-block ${className}`}></i>;
     }
 
-    // Full 4-Preset Catalog Matrix Verified
+    // --- All 4 Pristine Product Baseline Matrices ---
     const PRESET_TEMPLATES = [
       {
         id: 'shoe_rack_shelf',
@@ -81,6 +79,7 @@
         plywoodFace: 'crown_walnut',
         imgUrl: 'https://images.unsplash.com/photo-1595428774223-ef52624120d2?auto=format&fit=crop&w=800&q=80',
         category: 'Entryway & Storage',
+        likes: 384,
         features: ['Matte Black Pipe Structure', 'Heavy-Duty Shoe Capacity', 'Modern Minimalist Entryway']
       },
       {
@@ -92,6 +91,7 @@
         plywoodFace: 'crown_walnut',
         imgUrl: 'https://images.unsplash.com/photo-1530017758801-447a4c7e6822?auto=format&fit=crop&w=800&q=80',
         category: 'Dining Sets',
+        likes: 412,
         features: ['Steel Frame Integrity', 'Generational Walnut Finish', 'Matching Storage Bench']
       },
       {
@@ -103,6 +103,7 @@
         plywoodFace: 'baltic_birch',
         imgUrl: 'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=800&q=80',
         category: 'Living Room Corner',
+        likes: 228,
         features: ['Tri-point stable iron columns', 'Baltic Birch plates', 'Compact Footprint']
       },
       {
@@ -114,6 +115,7 @@
         plywoodFace: 'natural_oak',
         imgUrl: 'https://images.unsplash.com/photo-1560185007-c5ca9d2c014d?auto=format&fit=crop&w=800&q=80',
         category: 'Benches & Outdoor',
+        likes: 295,
         features: ['Brushed Steel Loop Frame', 'Flush Plywood Slats', 'Outdoor Grade Finish']
       }
     ];
@@ -132,45 +134,47 @@
     function App() {
       const [user, setUser] = useState(null);
       const [currentView, setCurrentView] = useState('home');
+      const [selectedTemplate, setSelectedTemplate] = useState(null);
 
       useEffect(() => {
         if (!auth) return;
-        const startupAuth = async () => {
+        const initAuth = async () => {
           try {
             if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
               await auth.signInWithCustomToken(__initial_auth_token);
             } else {
               await auth.signInAnonymously();
             }
-          } catch (e) { console.error("Identity initialization bypass:", e); }
+          } catch (error) { console.error("Identity Engine Pass:", error); }
         };
-        startupAuth();
-        return auth.onAuthStateChanged(u => setUser(u));
+        initAuth();
+        return auth.onAuthStateChanged(currentUser => setUser(currentUser));
       }, []);
 
       return (
         <div className="min-h-screen bg-[#FAF7F2] text-[#2D2A26] flex flex-col justify-between selection:bg-red-50 selection:text-red-900">
+          
           <nav className="bg-[#FAF7F2]/95 backdrop-blur-md border-b border-[#EAE3D2] sticky top-0 z-50">
             <div className="max-w-6xl mx-auto px-4 h-20 flex justify-between items-center">
-              <div class="flex items-center gap-3 cursor-pointer" onClick={() => setCurrentView('home')}>
+              <div className="flex items-center gap-3 cursor-pointer group" onClick={() => setCurrentView('home')}>
                 <AkkuLogo size={40} />
-                <div class="flex flex-col">
-                  <span class="font-sans font-black text-2xl tracking-widest leading-none">AKKU</span>
+                <div className="flex flex-col">
+                  <span class="font-sans font-black text-2xl tracking-widest text-[#2D2A26] leading-none">AKKU</span>
                   <span class="text-[9px] uppercase tracking-widest font-bold text-[#943A3A] mt-1">Hybrid Systems</span>
                 </div>
               </div>
               <div className="flex items-center gap-1">
-                <button onClick={() => setCurrentView('home')} class={`flex items-center gap-1.5 px-3 py-2 rounded-lg font-bold text-xs uppercase ${currentView === 'home' ? 'text-[#943A3A] bg-[#F2ECE1]' : 'text-stone-700'}`}>
-                  <LucideIcon name="home" size={14} /> <span class="hidden sm:inline">Home</span>
+                <button onClick={() => setCurrentView('home')} className={`flex items-center gap-2 px-3 py-2 rounded-lg font-bold text-xs uppercase tracking-wider ${currentView === 'home' ? 'text-[#943A3A] bg-[#F2ECE1] border-b-2 border-[#943A3A]' : 'text-stone-700 hover:bg-[#F2ECE1]'}`}>
+                  <LucideIcon name="home" size={14} /> <span class="hidden md:inline">Home</span>
                 </button>
-                <button onClick={() => setCurrentView('design')} class={`flex items-center gap-1.5 px-3 py-2 rounded-lg font-bold text-xs uppercase ${currentView === 'design' ? 'text-[#943A3A] bg-[#F2ECE1]' : 'text-stone-700'}`}>
-                  <LucideIcon name="pen-tool" size={14} /> <span class="hidden sm:inline">Design Pad</span>
+                <button onClick={() => setCurrentView('design')} className={`flex items-center gap-2 px-3 py-2 rounded-lg font-bold text-xs uppercase tracking-wider ${currentView === 'design' ? 'text-[#943A3A] bg-[#F2ECE1] border-b-2 border-[#943A3A]' : 'text-stone-700 hover:bg-[#F2ECE1]'}`}>
+                  <LucideIcon name="pen-tool" size={14} /> <span class="hidden md:inline">Design Pad</span>
                 </button>
-                <button onClick={() => setCurrentView('showcase')} class={`flex items-center gap-1.5 px-3 py-2 rounded-lg font-bold text-xs uppercase ${currentView === 'showcase' ? 'text-[#943A3A] bg-[#F2ECE1]' : 'text-stone-700'}`}>
-                  <LucideIcon name="sparkles" size={14} /> <span class="hidden sm:inline">Inspirations</span>
+                <button onClick={() => setCurrentView('showcase')} className={`flex items-center gap-2 px-3 py-2 rounded-lg font-bold text-xs uppercase tracking-wider ${currentView === 'showcase' ? 'text-[#943A3A] bg-[#F2ECE1] border-b-2 border-[#943A3A]' : 'text-stone-700 hover:bg-[#F2ECE1]'}`}>
+                  <LucideIcon name="sparkles" size={14} /> <span class="hidden md:inline">Inspirations</span>
                 </button>
-                <button onClick={() => setCurrentView('profile')} class={`flex items-center gap-1.5 px-3 py-2 rounded-lg font-bold text-xs uppercase ${currentView === 'profile' ? 'text-[#943A3A] bg-[#F2ECE1]' : 'text-stone-700'}`}>
-                  <LucideIcon name="user" size={14} /> <span class="hidden sm:inline">Track Order</span>
+                <button onClick={() => setCurrentView('profile')} className={`flex items-center gap-2 px-3 py-2 rounded-lg font-bold text-xs uppercase tracking-wider ${currentView === 'profile' ? 'text-[#943A3A] bg-[#F2ECE1] border-b-2 border-[#943A3A]' : 'text-stone-700 hover:bg-[#F2ECE1]'}`}>
+                  <LucideIcon name="user" size={14} /> <span class="hidden md:inline">Track Order</span>
                 </button>
               </div>
             </div>
@@ -190,9 +194,15 @@
 
           <footer className="bg-[#F2ECE1] text-[#2D2A26] py-12 text-center border-t border-[#E6DEC4]">
             <div className="max-w-6xl mx-auto px-4 flex flex-col items-center gap-4">
-              <AkkuLogo size={36} />
-              <p className="text-sm text-stone-600 max-w-md font-medium">Structural steel frames paired with premium cladded architectural plywood. Built for lifetimes.</p>
-              <p className="text-xs text-stone-500 font-semibold">© 2026 Akku Custom Manufacturing. All rights reserved.</p>
+              <div className="flex items-center gap-2">
+                <AkkuLogo size={36} />
+                <span className="font-sans font-black tracking-widest text-xl text-[#2D2A26] uppercase">AKKU</span>
+              </div>
+              <p className="text-sm text-stone-600 max-w-md font-medium">
+                Structural steel frames met with clean architectural plywood surfaces. Modern, robust, minimalist furniture built for your space.
+              </p>
+              <div className="w-12 h-[1px] bg-[#943A3A] my-2"></div>
+              <p className="text-xs text-stone-500 font-semibold">© 2026 Akku Custom Manufacturing.</p>
             </div>
           </footer>
         </div>
@@ -202,10 +212,12 @@
     function HomeView({ setCurrentView }) {
       return (
         <div className="animate-in fade-in duration-300">
-          <section className="bg-[#F5EFE6] py-24 text-center border-b border-[#EAE3D2] px-4">
-            <h1 className="text-4xl sm:text-6xl font-black tracking-tight mb-6 leading-tight">Steel Structural Strength. <br/><span className="text-[#943A3A]">Smooth Plywood Aesthetics.</span></h1>
-            <p className="text-stone-700 max-w-2xl mx-auto mb-10 font-semibold">Custom structural skeletons married with flush-fitted plywood faces. Tailored perfectly to your dimension needs.</p>
-            <button onClick={() => setCurrentView('design')} className="bg-[#943A3A] text-white px-8 py-4 rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-red-800 transition-colors">Launch Design Pad</button>
+          <section className="relative bg-[#F5EFE6] text-[#2D2A26] overflow-hidden border-b border-[#EAE3D2]">
+            <div className="relative max-w-6xl mx-auto px-6 py-24 text-center z-10">
+              <h1 className="font-sans text-4xl sm:text-6xl font-black tracking-tight mb-6">Steel Structural Strength. <br/><span className="text-[#943A3A]">Smooth Plywood Aesthetics.</span></h1>
+              <p className="text-stone-700 max-w-2xl mx-auto mb-10 font-semibold">Custom steel frames married with organic plywood coverings. Robust, minimalist, built for your exact space.</p>
+              <button onClick={() => setCurrentView('design')} className="bg-[#943A3A] text-white px-8 py-4 rounded-xl font-bold text-xs uppercase tracking-wider shadow-sm hover:scale-[1.01] transition-transform">Interactive Design Pad</button>
+            </div>
           </section>
         </div>
       );
@@ -218,7 +230,7 @@
       const [currentFeatureInput, setCurrentFeatureInput] = useState('');
       const [isSubmitting, setIsSubmitting] = useState(false);
       const [submitted, setSubmitted] = useState(false);
-
+      
       useEffect(() => {
         if (selectedTemplate) {
           setDescription(`Based on template: ${selectedTemplate.title}.\nModifications required: `);
@@ -229,9 +241,9 @@
       }, [selectedTemplate]);
 
       const handleAddFeatureTag = () => {
-        const val = currentFeatureInput.trim();
-        if (val && !customFeatures.includes(val)) {
-          setCustomFeatures([...customFeatures, val]);
+        const formattedTag = currentFeatureInput.trim();
+        if (formattedTag && !customFeatures.includes(formattedTag)) {
+          setCustomFeatures([...customFeatures, formattedTag]);
           setCurrentFeatureInput('');
         }
       };
@@ -242,51 +254,64 @@
         if (db) {
           try {
             await db.collection('orders').add({
-              description, dimensions, customFeatures, timestamp: firebase.firestore.FieldValue.serverTimestamp()
+              description,
+              dimensions,
+              customFeatures,
+              timestamp: firebase.firestore.FieldValue.serverTimestamp()
             });
-          } catch (err) { console.error("Firestore push bypassed:", err); }
+          } catch (err) { console.error("Firestore push bypass:", err); }
         }
-        setTimeout(() => { setIsSubmitting(false); setSubmitted(true); }, 1000);
+        setTimeout(() => {
+          setIsSubmitting(false);
+          setSubmitted(true);
+        }, 1200);
       };
 
       if (submitted) {
         return (
           <div className="max-w-2xl mx-auto p-12 text-center my-12 bg-white rounded-3xl border border-[#EAE3D2]">
-            <LucideIcon name="check" size={48} className="text-emerald-600 bg-emerald-50 p-2 rounded-full mb-4" />
-            <h2 className="text-2xl font-black mb-4 uppercase">Design Saved</h2>
-            <button onClick={() => { setSubmitted(false); setDescription(''); setDimensions(''); setCustomFeatures([]); }} className="bg-[#943A3A] text-white px-6 py-3 rounded-xl font-bold text-xs uppercase">Configure New Build</button>
+            <LucideIcon name="check" size={48} className="mx-auto text-emerald-600 bg-emerald-50 p-2 rounded-full mb-4" />
+            <h2 className="text-2xl font-black mb-4 uppercase">Design Confirmed</h2>
+            <p className="text-stone-600 mb-6 text-sm font-semibold">Your blueprint parameters have successfully synchronized into the fabrication matrix pipeline.</p>
+            <button onClick={() => { setSubmitted(false); setDescription(''); setDimensions(''); setCustomFeatures([]); }} className="bg-[#943A3A] text-white px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-wider">
+              New Custom Layout
+            </button>
           </div>
         );
       }
 
       return (
         <div className="max-w-4xl mx-auto p-4 py-12">
-          <form onSubmit={handleSubmit} className="bg-white p-8 md:p-10 rounded-3xl border border-[#EAE3D2] space-y-6 shadow-sm">
-            <h2 className="text-xl font-black uppercase tracking-wide border-b pb-3 text-stone-800">Workspace Specification Parameters</h2>
+          <h2 className="text-3xl font-black mb-8 uppercase text-center tracking-wide">Design Pad</h2>
+          <form onSubmit={handleSubmit} className="bg-white p-8 md:p-10 rounded-3xl border border-[#EAE3D2] shadow-sm space-y-6">
             <div>
-              <label className="block font-bold text-xs uppercase mb-2 text-stone-700">1. Conceptual Form Adjustments</label>
-              <textarea required className="w-full h-32 p-4 border rounded-xl text-sm focus:outline-none focus:border-[#943A3A]" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Describe configuration blueprints or special framing request details..." />
+              <label className="block font-bold text-xs uppercase mb-2 text-stone-700 tracking-wider">1. Describe your furniture concept</label>
+              <textarea required className="w-full h-32 p-4 border border-[#EAE3D2] rounded-xl text-sm focus:outline-none focus:border-[#943A3A]" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Describe your structural adjustments, custom shapes, hardware specs..." />
             </div>
+
             <div>
-              <label className="block font-bold text-xs uppercase mb-2 text-stone-700">2. Metric Plan Dimensions</label>
-              <input required className="w-full p-4 border rounded-xl text-sm focus:outline-none focus:border-[#943A3A]" value={dimensions} onChange={(e) => setDimensions(e.target.value)} placeholder="E.g., W: 90cm, D: 32cm, H: 110cm" />
+              <label className="block font-bold text-xs uppercase mb-2 text-stone-700 tracking-wider">2. Plan Geometry Dimensions</label>
+              <input required className="w-full p-4 border border-[#EAE3D2] rounded-xl text-sm focus:outline-none focus:border-[#943A3A]" value={dimensions} onChange={(e) => setDimensions(e.target.value)} placeholder="E.g., Table: 150x80x75cm, Bench: 120x35x45cm" />
             </div>
+            
             <div>
-              <label className="block font-bold text-xs uppercase mb-2 text-stone-700">3. Functional Add-ons & Utilities</label>
-              <div className="flex gap-2 mb-3">
-                <input className="flex-grow p-3 border rounded-xl text-sm focus:outline-none" value={currentFeatureInput} onChange={(e) => setCurrentFeatureInput(e.target.value)} placeholder="Type utility option (e.g., Leveling tracks, custom utility nodes)" onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleAddFeatureTag(); } }} />
-                <button type="button" onClick={handleAddFeatureTag} className="bg-[#2D2A26] text-white px-4 rounded-xl"><LucideIcon name="plus-circle" size={18} /></button>
+              <label className="block font-bold text-xs uppercase mb-2 text-stone-700 tracking-wider">3. Custom Add-ons & Integrated Utilities</label>
+              <div className="flex gap-2 mb-4">
+                <input className="flex-grow p-3 border border-[#EAE3D2] rounded-xl text-sm focus:outline-none focus:border-[#943A3A]" value={currentFeatureInput} onChange={(e) => setCurrentFeatureInput(e.target.value)} placeholder="Add features (e.g., Heavy-duty pipe couplers, integrated wireless nodes)" onKeyDown={(e) => { if(e.key==='Enter') { e.preventDefault(); handleAddFeatureTag(); } }} />
+                <button type="button" onClick={handleAddFeatureTag} className="bg-[#2D2A26] text-white px-4 rounded-xl flex items-center justify-center hover:bg-stone-800"><LucideIcon name="plus-circle" size={18} /></button>
               </div>
+              
               <div className="flex flex-wrap gap-2">
                 {customFeatures.map(feat => (
-                  <span key={feat} className="bg-[#F2ECE1] text-[#943A3A] font-bold px-3 py-1.5 rounded-lg text-xs flex items-center gap-1.5 border border-[#EAE3D2]">
-                    {feat} <button type="button" onClick={() => setCustomFeatures(customFeatures.filter(f => f !== feat))} className="text-stone-400 font-bold hover:text-[#943A3A]">×</button>
+                  <span key={feat} className="bg-[#F2ECE1] text-[#943A3A] font-bold px-3 py-1.5 rounded-lg text-xs flex items-center gap-2 border border-[#EAE3D2]">
+                    {feat} <button type="button" onClick={() => setCustomFeatures(customFeatures.filter(f => f !== feat))} className="text-stone-400 hover:text-[#943A3A] font-bold">×</button>
                   </span>
                 ))}
               </div>
             </div>
-            <button type="submit" disabled={isSubmitting} className="w-full bg-[#943A3A] hover:bg-red-800 text-white py-4 rounded-xl font-bold uppercase text-xs tracking-wider">
-              {isSubmitting ? 'Transmitting Data Array...' : 'Submit to Workshop Build Queue'}
+
+            <button type="submit" disabled={isSubmitting} className="w-full bg-[#943A3A] text-white py-4 rounded-xl font-bold uppercase text-xs tracking-wider transition-colors hover:bg-red-800">
+              {isSubmitting ? 'Transmitting Blueprints...' : 'Submit to Workshop Build Matrix'}
             </button>
           </form>
         </div>
@@ -296,25 +321,27 @@
     function ShowcaseView({ onLoadTemplate }) {
       return (
         <div className="max-w-6xl mx-auto p-4 py-12">
-          <h2 className="text-3xl font-black mb-2 uppercase text-center">Inspiration Catalog</h2>
-          <p className="text-center text-stone-500 font-semibold text-sm mb-10">Choose a design variant layout baseline to import specs directly</p>
-          <div className="grid md:grid-cols-2 gap-8">
+          <h2 className="text-3xl font-black mb-2 uppercase text-center tracking-wide">Inspiration Feed</h2>
+          <p className="text-center text-stone-500 font-semibold text-sm mb-10">Select a structural baseline model to map baseline presets</p>
+          <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8">
             {PRESET_TEMPLATES.map(post => (
-              <div key={post.id} className="bg-white rounded-3xl overflow-hidden border border-[#EAE3D2] flex flex-col justify-between shadow-sm">
+              <div key={post.id} className="bg-white rounded-3xl overflow-hidden border border-[#EAE3D2] shadow-sm flex flex-col justify-between">
                 <div>
                   <img src={post.imgUrl} alt={post.title} className="w-full h-64 object-cover" />
                   <div className="p-6 space-y-3">
-                    <h3 className="font-extrabold text-lg text-stone-900">{post.title}</h3>
-                    <p className="text-xs text-stone-600 leading-relaxed font-medium">{post.desc}</p>
-                    <div className="flex flex-wrap gap-1 pt-1">
+                    <h3 className="font-bold text-lg text-stone-900">{post.title}</h3>
+                    <p className="text-xs text-stone-600 leading-relaxed font-semibold">{post.desc}</p>
+                    <div className="flex flex-wrap gap-1 pt-2">
                       {post.features.map(f => (
-                        <span key={f} className="bg-[#FAF7F2] border border-[#EAE3D2] text-[10px] font-bold text-stone-600 px-2.5 py-1 rounded-md uppercase">{f}</span>
+                        <span key={f} className="bg-[#FAF7F2] border border-[#EAE3D2] text-[10px] font-bold text-stone-600 px-2.5 py-1 rounded-md uppercase tracking-wide">{f}</span>
                       ))}
                     </div>
                   </div>
                 </div>
                 <div className="p-6 pt-0">
-                  <button onClick={() => onLoadTemplate(post)} className="w-full bg-[#F2ECE1] border border-[#EAE3D2] py-3 rounded-xl font-bold text-xs uppercase tracking-wider text-stone-800 hover:bg-[#EAE3D2]">Configure This Layout</button>
+                  <button onClick={() => onLoadTemplate(post)} className="w-full bg-[#F2ECE1] border border-[#EAE3D2] py-3 rounded-xl font-bold text-xs uppercase tracking-wider text-stone-800 hover:bg-[#EAE3D2] transition-colors">
+                    Configure Layout
+                  </button>
                 </div>
               </div>
             ))}
@@ -325,9 +352,9 @@
 
     function ProfileView() {
       return (
-        <div className="max-w-2xl mx-auto p-12 text-center my-12 border border-dashed border-[#EAE3D2] bg-white rounded-3xl">
+        <div className="max-w-2xl mx-auto p-12 text-center my-12 border border-dashed border-[#EAE3D2] bg-white rounded-3xl shadow-sm">
           <LucideIcon name="clock" size={32} className="mx-auto text-[#943A3A] mb-3" />
-          <p className="text-stone-600 text-sm font-semibold">No active build matrices mapped yet. Use the Design Pad to get started.</p>
+          <p className="text-stone-600 text-sm font-semibold">No active build projects. Use the Design Pad to get started.</p>
         </div>
       );
     }
