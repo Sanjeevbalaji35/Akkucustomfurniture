@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Akku | Custom Structural Steel & Plywood Furniture</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brandCharcoal: '#2D2A26',
+            brandAlabaster: '#FAF7F2',
+            brandSand: '#F2ECE1',
+            brandCrimson: '#943A3A',
+          }
+        }
+      }
+    }
+  </script>
+
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=300;400;500;600;700;800&display=swap');
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+  </style>
+</head>
+<body class="bg-[#FAF7F2] text-[#2D2A26] min-h-screen">
+
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+
+    // --- Firebase Setup ---
+    let db = null;
+    let auth = null;
+    let appId = "akku-furniture-app";
+
+    try {
+      const configString = typeof __firebase_config !== 'undefined' ? __firebase_config : localStorage.getItem('AKKU_FIREBASE_CONFIG');
+      if (configString) {
+        const firebaseConfig = JSON.parse(configString);
+        firebase.initializeApp(firebaseConfig);
+        auth = firebase.auth();
+        db = firebase.firestore();
+        appId = typeof __app_id !== 'undefined' ? __app_id : 'akku-furniture-app';
+      }
+    } catch (e) {
+      console.warn("Database operating in local mode.", e);
+    }
+
+    const PRESET_TEMPLATES = [
+      {
+        id: 'akku_connect_table',
+        title: 'The Akku Connect C-Table',
+        desc: 'An architectural side-table engineered to slide perfectly over sofa arms or lounge seats. Built with a continuous double-fold matte black structural metal skeleton and topped with beautiful, clean-grained Baltic Birch plywood.',
+        dimensions: 'W: 42cm, D: 32cm, H: 62cm',
+        metalFinish: 'matte_black',
+        plywoodFace: 'baltic_birch',
+        imgUrl: 'https://images.unsplash.com/photo-1533090368676-1fd25485ce69?auto=format&fit=crop&w=800&q=80',
+        category: 'Smart Side Tables',
+        features: ['Sleek Mobile Phone Holder', 'Recessed Beverage Sleeve', 'Under-frame Cable Channel']
+      },
+      {
+        id: 'transit_organiser',
+        title: 'The Deccan Transit Utility Rack',
+        desc: 'A heavy-duty, multi-tier utility shelving unit optimized for entryways, storage closets, or shoe organization. Solid circular steel tube pillars secure four robust natural oak-veneered plywood plates.',
+        dimensions: 'W: 75cm, D: 30cm, H: 105cm',
+        metalFinish: 'matte_black',
+        plywoodFace: 'natural_oak',
+        imgUrl: 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=800&q=80',
+        category: 'Entryway & Storage',
+        features: ['Continuous Steel Tube Pillars', 'Easy Cleaning Clearance', '4-Tier High Capacity Design']
+      }
+    ];
+
+    function AkkuLogo({ size = 32 }) {
+      return (
+        <svg width={size} height={size} viewBox="0 0 100 100" fill="none" className="inline-block">
+          <polygon points="50,15 90,85 10,85" fill="#943A3A" stroke="#943A3A" strokeWidth="2" strokeLinejoin="round" />
+          <circle cx="50" cy="46" r="7.5" fill="white" />
+          <circle cx="37" cy="68" r="7.5" fill="white" />
+          <circle cx="63" cy="68" r="7.5" fill="white" />
+        </svg>
+      );
+    }
+
+    function App() {
+      const [currentView, setCurrentView] = useState('home');
+      const [user, setUser] = useState({ uid: 'guest_user_demo' });
+      const [selectedTemplate, setSelectedTemplate] = useState(null);
+
+      useEffect(() => {
+        if (!auth) return;
+        auth.signInAnonymously()
+          .then((cred) => setUser(cred.user))
+          .catch(err => console.warn("Running in local sandbox mode", err));
+      }, []);
+
+      const handleLoadTemplate = (template) => {
+        setSelectedTemplate(template);
+        setCurrentView('design');
+      };
+
+      return (
+        <div className="min-h-screen bg-[#FAF7F2] text-[#2D2A26] flex flex-col justify-between selection:bg-red-50 selection:text-red-900">
+          
+          {/* Header Navigation */}
+          <header className="bg-[#FAF7F2]/95 backdrop-blur-md border-b border-[#EAE3D2] sticky top-0 z-50">
+            <div className="max-w-6xl mx-auto px-4 h-20 flex justify-between items-center">
+              <div className="flex items-center gap-3 cursor-pointer group" onClick={() => setCurrentView('home')}>
+                <AkkuLogo size={40} />
+                <div className="flex flex-col">
+                  <span className="font-sans font-extrabold text-2xl tracking-widest leading-none">AKKU</span>
+                  <span className="text-[9px] uppercase tracking-widest font-bold text-[#943A3A] mt-1">Hybrid Systems</span>
+                </div>
+              </div>
+              
+              <div className="flex gap-2">
+                <button onClick={() => setCurrentView('home')} className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider ${currentView === 'home' ? 'text-[#943A3A]' : 'text-stone-600'}`}>Home</button>
+                <button onClick={() => setCurrentView('design')} className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider ${currentView === 'design' ? 'text-[#943A3A]' : 'text-stone-600'}`}>Design Pad</button>
+                <button onClick={() => setCurrentView('showcase')} className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider ${currentView === 'showcase' ? 'text-[#943A3A]' : 'text-stone-600'}`}>Inspirations</button>
+                <button onClick={() => setCurrentView('profile')} className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider ${currentView === 'profile' ? 'text-[#943A3A]' : 'text-stone-600'}`}>Track Job</button>
+              </div>
+            </div>
+          </header>
+
+          <main className="flex-grow">
+            {currentView === 'home' && <HomeView setCurrentView={setCurrentView} />}
+            {currentView === 'design' && (
+              <DesignStudio 
+                user={user} 
+                setCurrentView={setCurrentView} 
+                selectedTemplate={selectedTemplate}
+                clearSelectedTemplate={() => setSelectedTemplate(null)}
+              />
+            )}
+            {currentView === 'showcase' && <ShowcaseView onLoadTemplate={handleLoadTemplate} />}
+            {currentView === 'profile' && <ProfileView user={user} />}
+          </main>
+
+          <footer className="bg-[#F2ECE1] border-t border-[#E6DEC4] py-12 text-center">
+            <div className="max-w-6xl mx-auto px-4 flex flex-col items-center gap-4">
+              <AkkuLogo size={36} />
+              <p className="text-sm text-stone-600 max-w-md font-medium">
+                Structural steel frames met with clean architectural plywood surfaces. Built for durability, tailored for your specific lifestyle.
+              </p>
+              <p className="text-xs text-stone-500 font-semibold">© 2026 Akku Custom Manufacturing. All rights reserved.</p>
+            </div>
+          </footer>
+
+        </div>
+      );
+    }
+
+    function HomeView({ setCurrentView }) {
+      return (
+        <div className="animate-in fade-in duration-300">
+          <section className="relative bg-[#F5EFE6] py-24 text-center border-b border-[#EAE3D2] px-4">
+            <span className="text-xs font-bold uppercase tracking-widest text-[#943A3A] mb-4 bg-white/80 border border-[#EAE3D2] px-4 py-1.5 rounded-full inline-block">Engineering Excellence</span>
+            <h1 className="text-4xl sm:text-6xl font-black tracking-tight mb-6 text-[#2D2A26] leading-tight max-w-4xl mx-auto">
+              Steel Structural Strength.<br/>
+              <span className="text-[#943A3A]">Smooth Plywood Aesthetics.</span>
+            </h1>
+            <p className="text-stone-700 max-w-2xl mx-auto mb-10 font-semibold leading-relaxed">
+              We combine robust steel frameworks with clean plywood coverings. The steel framework provides incredible weight-bearing capacity, while the plywood keeps pieces lightweight, modern, and beautiful.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto">
+              <button onClick={() => setCurrentView('design')} className="bg-[#943A3A] text-white px-8 py-4 rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-red-800 transition-all">Launch Design Pad</button>
+              <button onClick={() => setCurrentView('showcase')} className="bg-white border border-[#EAE3D2] text-[#2D2A26] px-8 py-4 rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-stone-50 transition-all">View Catalog</button>
+            </div>
+          </section>
+        </div>
+      );
+    }
+
+    function DesignStudio({ user, setCurrentView, selectedTemplate, clearSelectedTemplate }) {
+      const [mode, setMode] = useState('draw');
+      const [description, setDescription] = useState('');
+      const [dimensions, setDimensions] = useState('');
+      const [metalFinish, setMetalFinish] = useState('matte_black');
+      const [plywoodFace, setPlywoodFace] = useState('baltic_birch');
+      const [customFeatures, setCustomFeatures] = useState([]);
+      const [featureInput, setFeatureInput] = useState('');
+      const [uploadedImage, setUploadedImage] = useState(null);
+      const [isSubmitting, setIsSubmitting] = useState(false);
+      const [submitted, setSubmitted] = useState(false);
+      const canvasRef = useRef(null);
+      const [isDrawing, setIsDrawing] = useState(false);
+
+      useEffect(() => {
+        if (selectedTemplate) {
+          setDescription(`Based on template: ${selectedTemplate.title}.\n\nMy modifications: `);
+          setDimensions(selectedTemplate.dimensions);
+          setMetalFinish(selectedTemplate.metalFinish);
+          setPlywoodFace(selectedTemplate.plywoodFace);
+          if (selectedTemplate.features) setCustomFeatures(selectedTemplate.features);
+          if (selectedTemplate.imgUrl) {
+            setUploadedImage(selectedTemplate.imgUrl);
+            setMode('upload');
+          }
+          clearSelectedTemplate();
+        }
+      }, [selectedTemplate]);
+
+      useEffect(() => {
+        if (mode === 'draw' && canvasRef.current) {
+          const canvas = canvasRef.current;
+          const ctx = canvas.getContext('2d');
+          canvas.width = canvas.parentElement.getBoundingClientRect().width || 500;
+          canvas.height = 360;
+          ctx.fillStyle = '#FFFFFF';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.lineWidth = 4;
+          ctx.lineCap = 'round';
+          ctx.strokeStyle = '#2D2A26';
+        }
+      }, [mode]);
+
+      const handleAddTag = () => {
+        if (featureInput.trim() && !customFeatures.includes(featureInput.trim())) {
+          setCustomFeatures([...customFeatures, featureInput.trim()]);
+          setFeatureInput('');
+        }
+      };
+
+      const clearCanvas = () => {
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      };
+
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+        setTimeout(() => {
+          setIsSubmitting(false);
+          setSubmitted(true);
+        }, 800);
+      };
+
+      return (
+        <div className="max-w-4xl mx-auto p-4 py-12">
+          {submitted ? (
+            <div className="bg-white rounded-3xl p-12 text-center border border-[#EAE3D2] shadow-sm max-w-2xl mx-auto">
+              <h2 className="text-2xl font-black mb-4 uppercase">Design Received</h2>
+              <p className="text-stone-600 mb-8 font-semibold">Blueprint transmitted! Our workshop team will review the parameters shortly.</p>
+              <button type="button" onClick={() => setSubmitted(false)} className="bg-[#943A3A] text-white px-6 py-3.5 rounded-xl font-bold text-xs uppercase tracking-wider">Create New Design</button>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-10">
+              <div className="bg-white rounded-3xl border border-[#EAE3D2] overflow-hidden shadow-sm">
+                <div className="flex border-b border-[#EAE3D2] bg-[#F2ECE1]">
+                  <button type="button" onClick={() => setMode('draw')} className={`flex-1 py-4 font-bold text-xs uppercase tracking-wider ${mode==='draw' ? 'bg-white text-[#943A3A]' : 'text-stone-600'}`}>Draw Sketch</button>
+                  <button type="button" onClick={() => setMode('upload')} className={`flex-1 py-4 font-bold text-xs uppercase tracking-wider ${mode==='upload' ? 'bg-white text-[#943A3A]' : 'text-stone-600'}`}>Upload reference</button>
+                </div>
