@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Akku | Custom Structural Steel & Plywood Furniture</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brandCharcoal: '#2D2A26',
+            brandAlabaster: '#FAF7F2',
+            brandSand: '#F2ECE1',
+            brandCrimson: '#943A3A',
+          }
+        }
+      }
+    }
+  </script>
+
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+  </style>
+</head>
+<body class="bg-[#FAF7F2] text-[#2D2A26] min-h-screen">
+
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+
+    const PRESET_TEMPLATES = [
+      {
+        id: 'akku_connect_table',
+        title: 'The Akku Connect C-Table',
+        desc: 'An architectural side-table engineered to slide perfectly over sofa arms or lounge seats. Built with a continuous double-fold matte black structural metal skeleton and topped with beautiful, clean-grained Baltic Birch plywood.',
+        dimensions: 'W: 42cm, D: 32cm, H: 62cm',
+        metalFinish: 'matte_black',
+        plywoodFace: 'baltic_birch',
+        imgUrl: 'https://images.unsplash.com/photo-1533090368676-1fd25485ce69?auto=format&fit=crop&w=800&q=80',
+        category: 'Smart Side Tables',
+        features: ['Sleek Mobile Phone Holder', 'Recessed Beverage Sleeve', 'Under-frame Cable Channel']
+      },
+      {
+        id: 'transit_organiser',
+        title: 'The Deccan Transit Utility Rack',
+        desc: 'A heavy-duty, multi-tier utility shelving unit optimized for entryways, storage closets, or shoe organization. Solid circular steel tube pillars secure four robust natural oak-veneered plywood plates.',
+        dimensions: 'W: 75cm, D: 30cm, H: 105cm',
+        metalFinish: 'matte_black',
+        plywoodFace: 'natural_oak',
+        imgUrl: 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=800&q=80',
+        category: 'Entryway & Storage',
+        features: ['Continuous Steel Tube Pillars', 'Easy Cleaning Clearance', '4-Tier High Capacity Design']
+      }
+    ];
+
+    function AkkuLogo({ size = 32 }) {
+      return (
+        <svg width={size} height={size} viewBox="0 0 100 100" fill="none" className="inline-block">
+          <polygon points="50,15 90,85 10,85" fill="#943A3A" stroke="#943A3A" strokeWidth="2" strokeLinejoin="round" />
+          <circle cx="50" cy="46" r="7.5" fill="white" />
+          <circle cx="37" cy="68" r="7.5" fill="white" />
+          <circle cx="63" cy="68" r="7.5" fill="white" />
+        </svg>
+      );
+    }
+
+    function App() {
+      const [currentView, setCurrentView] = useState('home');
+      const [selectedTemplate, setSelectedTemplate] = useState(null);
+
+      const handleLoadTemplate = (template) => {
+        setSelectedTemplate(template);
+        setCurrentView('design');
+      };
+
+      return (
+        <div class="min-h-screen bg-[#FAF7F2] text-[#2D2A26] flex flex-col justify-between selection:bg-red-50 selection:text-red-900">
+          
+          {/* Header Navigation */}
+          <header class="bg-[#FAF7F2]/95 backdrop-blur-md border-b border-[#EAE3D2] sticky top-0 z-50">
+            <div class="max-w-6xl mx-auto px-4 h-20 flex justify-between items-center">
+              <div class="flex items-center gap-3 cursor-pointer group" onClick={() => setCurrentView('home')}>
+                <AkkuLogo size={40} />
+                <div class="flex flex-col">
+                  <span class="font-sans font-extrabold text-2xl tracking-widest leading-none">AKKU</span>
+                  <span class="text-[9px] uppercase tracking-widest font-bold text-[#943A3A] mt-1">Hybrid Systems</span>
+                </div>
+              </div>
+              
+              <div class="flex gap-2">
+                <button onClick={() => setCurrentView('home')} class={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider ${currentView === 'home' ? 'text-[#943A3A]' : 'text-stone-600'}`}>Home</button>
+                <button onClick={() => setCurrentView('design')} class={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider ${currentView === 'design' ? 'text-[#943A3A]' : 'text-stone-600'}`}>Design Pad</button>
+                <button onClick={() => setCurrentView('showcase')} class={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider ${currentView === 'showcase' ? 'text-[#943A3A]' : 'text-stone-600'}`}>Inspirations</button>
+                <button onClick={() => setCurrentView('profile')} class={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider ${currentView === 'profile' ? 'text-[#943A3A]' : 'text-stone-600'}`}>Track Job</button>
+              </div>
+            </div>
+          </header>
+
+          <main class="flex-grow">
+            {currentView === 'home' && <HomeView setCurrentView={setCurrentView} />}
+            {currentView === 'design' && (
+              <DesignStudio 
+                setCurrentView={setCurrentView} 
+                selectedTemplate={selectedTemplate}
+                clearSelectedTemplate={() => setSelectedTemplate(null)}
+              />
+            )}
+            {currentView === 'showcase' && <ShowcaseView onLoadTemplate={handleLoadTemplate} />}
+            {currentView === 'profile' && <ProfileView />}
+          </main>
+
+          <footer class="bg-[#F2ECE1] border-t border-[#E6DEC4] py-12 text-center">
+            <div class="max-w-6xl mx-auto px-4 flex flex-col items-center gap-4">
+              <AkkuLogo size={36} />
+              <p class="text-sm text-stone-600 max-w-md font-medium">
+                Structural steel frames met with clean architectural plywood surfaces. Built for durability, tailored for your specific lifestyle.
+              </p>
+              <p class="text-xs text-stone-500 font-semibold">© 2026 Akku Custom Manufacturing. All rights reserved.</p>
+            </div>
+          </footer>
+
+        </div>
+      );
+    }
+
+    function HomeView({ setCurrentView }) {
+      return (
+        <div class="animate-in fade-in duration-300">
+          <section class="relative bg-[#F5EFE6] py-24 text-center border-b border-[#EAE3D2] px-4">
+            <span class="text-xs font-bold uppercase tracking-widest text-[#943A3A] mb-4 bg-white/80 border border-[#EAE3D2] px-4 py-1.5 rounded-full inline-block">Engineering Excellence</span>
+            <h1 class="text-4xl sm:text-6xl font-black tracking-tight mb-6 text-[#2D2A26] leading-tight max-w-4xl mx-auto">
+              Steel Structural Strength.<br/>
+              <span class="text-[#943A3A]">Smooth Plywood Aesthetics.</span>
+            </h1>
+            <p class="text-stone-700 max-w-2xl mx-auto mb-10 font-semibold leading-relaxed">
+              We combine robust steel frameworks with clean plywood coverings. The steel framework provides incredible weight-bearing capacity, while the plywood keeps pieces lightweight, modern, and beautiful.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto">
+              <button onClick={() => setCurrentView('design')} class="bg-[#943A3A] text-white px-8 py-4 rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-red-800 transition-all">Launch Design Pad</button>
+              <button onClick={() => setCurrentView('showcase')} class="bg-white border border-[#EAE3D2] text-[#2D2A26] px-8 py-4 rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-stone-50 transition-all">View Catalog</button>
+            </div>
+          </section>
+
+          <section class="py-20 max-w-6xl mx-auto px-4">
+            <div class="grid md:grid-cols-3 gap-8">
+              <div class="bg-[#F2ECE1]/50 p-8 rounded-2xl border border-[#EAE3D2]">
+                <h3 class="font-bold text-lg mb-2 uppercase tracking-wide text-stone-800">1. Welded Steel Skeleton</h3>
+                <p class="text-stone-600 text-sm font-semibold leading-relaxed">We fabricate an architectural metal skeleton ensuring zero sagging under extreme physical loads.</p>
+              </div>
+              <div class="bg-[#F2ECE1]/50 p-8 rounded-2xl border border-[#EAE3D2]">
+                <h3 class="font-bold text-lg mb-2 uppercase tracking-wide text-stone-800">2. Premium Plywood Shell</h3>
+                <p class="text-stone-600 text-sm font-semibold leading-relaxed">Sanded Baltic Birch or rich walnut coverings are cladded flush for high visual warmth and simple portability.</p>
+              </div>
+              <div class="bg-[#F2ECE1]/50 p-8 rounded-2xl border border-[#EAE3D2]">
+                <h3 class="font-bold text-lg mb-2 uppercase tracking-wide text-stone-800">3. Custom Integrations</h3>
+                <p class="text-stone-600 text-sm font-semibold leading-relaxed">Fabricate tailored items directly into your specs like power docks, custom hooks, or phone slides.</p>
+              </div>
+            </div>
+          </section>
+        </div>
+      );
+    }
+
+    function DesignStudio({ setCurrentView, selectedTemplate, clearSelectedTemplate }) {
+      const [mode, setMode] = useState('draw');
+      const [description, setDescription] = useState('');
+      const [dimensions, setDimensions] = useState('');
+      const [metalFinish, setMetalFinish] = useState('matte_black');
+      const [plywoodFace, setPlywoodFace] = useState('baltic_birch');
+      const [customFeatures, setCustomFeatures] = useState([]);
+      const [featureInput, setFeatureInput] = useState('');
+      const [uploadedImage, setUploadedImage] = useState(null);
+      const [isSubmitting, setIsSubmitting] = useState(false);
+      const [submitted, setSubmitted] = useState(false);
+      const canvasRef = useRef(null);
+      const [isDrawing, setIsDrawing] = useState(false);
+
+      useEffect(() => {
+        if (selectedTemplate) {
+          setDescription(`Based on template: ${selectedTemplate.title}.\n\nMy modifications: `);
+          setDimensions(selectedTemplate.dimensions);
+          setMetalFinish(selectedTemplate.metalFinish);
+          setPlywoodFace(selectedTemplate.plywoodFace);
+          if (selectedTemplate.features) setCustomFeatures(selectedTemplate.features);
+          if (selectedTemplate.imgUrl) {
+            setUploadedImage(selectedTemplate.imgUrl);
+            setMode('upload');
+          }
+          clearSelectedTemplate();
+        }
+      }, [selectedTemplate]);
+
+      useEffect(() => {
+        if (mode === 'draw' && canvasRef.current) {
+          const canvas = canvasRef.current;
+          const ctx = canvas.getContext('2d');
+          canvas.width = canvas.parentElement.getBoundingClientRect().width || 500;
+          canvas.height = 360;
+          ctx.fillStyle = '#FFFFFF';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.lineWidth = 4;
+          ctx.lineCap = 'round';
+          ctx.strokeStyle = '#2D2A26';
+        }
+      }, [mode]);
+
+      const handleAddTag = () => {
+        if (featureInput.trim() && !customFeatures.includes(featureInput.trim())) {
+          setCustomFeatures([...customFeatures, featureInput.trim()]);
+          setFeatureInput('');
+        }
+      };
+
+      const handleRemoveTag = (tag) => {
+        setCustomFeatures(customFeatures.filter(t => t !== tag));
+      };
+
+      const clearCanvas = () => {
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      };
+
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+        
+        let visualData = uploadedImage;
+        if (mode === 'draw' && canvasRef.current) {
+          visualData = canvasRef.current.toDataURL('image/jpeg', 0.7);
+        }
+
+        const payload = {
+          description,
+          dimensions,
+          metalFinish,
+          plywoodFace,
+          customFeatures,
+          visualData,
+          status: 'pending_review',
+          createdAt: new Date().toISOString()
+        };
+
+        const localOrders = JSON.parse(localStorage.getItem('AKKU_LOCAL_ORDERS') || '[]');
+        localOrders.push(payload);
+        localStorage.setItem('AKKU_LOCAL_ORDERS', JSON.stringify(localOrders));
+
+        setTimeout(() => {
+          setIsSubmitting(false);
+          setSubmitted(true);
+        }, 800);
+      };
+
+      return (
+        <div class="max-w-4xl mx-auto p-4 py-12">
+          {submitted ? (
+            <div class="bg-white rounded-3xl p-12 text-center border border-[#EAE3D2] shadow-sm max-w-2xl mx-auto">
+              <h2 class="text-2xl font-black mb-4 uppercase">Design Saved</h2>
+              <p class="text-stone-600 mb-8 font-semibold">Your blueprint adjustments have been recorded locally! Check the Job Tracker tab to review your parameters.</p>
+              <div class="flex gap-4 justify-center">
+                <button type="button" onClick={() => setCurrentView('profile')} class="bg-[#2D2A26] text-white px-6 py-3.5 rounded-xl font-bold text-xs uppercase tracking-wider">Track Spec Progress</button>
+                <button type="button" onClick={() => { setSubmitted(false); setDescription(''); setCustomFeatures([]); setUploadedImage(null); }} class="bg-[#943A3A] text-white px-6 py-3.5 rounded-xl font-bold text-xs uppercase tracking-wider">Create New Design</button>
+              </div>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} class="space-y-10">
+              <div class="bg-white rounded-3xl border border-[#EAE3D2] overflow-hidden shadow-sm">
+                <div class="flex border-b border-[#EAE3D2] bg-[#F2ECE1]">
+                  <button type="button" onClick={() => setMode('draw')} class={`flex-1 py-4 font-bold text-xs uppercase tracking-wider ${mode==='draw' ? 'bg-white text-[#943A3A]' : 'text-stone-600'}`}>Draw Sketch</button>
+                  <button type="button" onClick={() => setMode('upload')} class={`flex-1 py-4 font-bold text-xs uppercase tracking-wider ${mode==='upload' ? 'bg-white text-[#943A3A]' : 'text-stone-600'}`}>Upload reference</button>
+                </div>
+                <div class="p-6 md:p-10 space-y-8">
+                  
+                  <div>
+                    <label class="block text-xs font-bold uppercase text-stone-700 tracking-wider mb-3">1. Geometry Reference</label>
+                    {mode === 'draw' ? (
+                      <div class="border border-[#EAE3D2] rounded-2xl overflow-hidden bg-[#FAF7F2] relative">
+                        <canvas 
+                          ref={canvasRef}
+                          onMouseDown={(e) => { setIsDrawing(true); const rect = canvasRef.current.getBoundingClientRect(); canvasRef.current.getContext('2d').beginPath(); canvasRef.current.getContext('2d').moveTo(e.clientX - rect.left, e.clientY - rect.top); }}
+                          onMouseMove={(e) => { if(!isDrawing) return; const rect = canvasRef.current.getBoundingClientRect(); const ctx = canvasRef.current.getContext('2d'); ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top); ctx.stroke(); }}
+                          onMouseUp={() => setIsDrawing(false)}
+                          class="w-full bg-white cursor-crosshair touch-none"
+                        />
+                        <button type="button" onClick={clearCanvas} class="absolute top-4 right-4 bg-stone-800 text-white px-3 py-1 text-xs rounded">Clear</button>
+                      </div>
+                    ) : (
+                      <div class="border border-dashed border-[#EAE3D2] p-8 text-center rounded-2xl bg-[#FAF7F2]">
+                        <input type="file" accept="image/*" onChange={(e) => { const r = new FileReader(); r.onload = (ev) => setUploadedImage(ev.target.result); r.readAsDataURL(e.target.files[0]); }} class="block mx-auto text-xs" />
+                        {uploadedImage && <img src={uploadedImage} class="max-h-48 mx-auto mt-4 rounded-xl" />}
+                      </div>
+                    )}
+                  </div>
+
+                  <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                      <label class="block text-xs font-bold uppercase text-stone-700 tracking-wider mb-2">2. Framework Skeleton Finish</label>
+                      <select value={metalFinish} onChange={(e) => setMetalFinish(e.target.value)} class="w-full p-3 border border-[#EAE3D2] rounded-xl text-sm font-semibold bg-white">
+                        <option value="matte_black">Matte Black Powdercoat</option>
+                        <option value="brushed_steel">Brushed Raw Steel Finish</option>
+                        <option value="champagne_bronze">Champagne Bronze Polish</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label class="block text-xs font-bold uppercase text-stone-700 tracking-wider mb-2">3. Plywood Overlay Face</label>
+                      <select value={plywoodFace} onChange={(e) => setPlywoodFace(e.target.value)} class="w-full p-3 border border-[#EAE3D2] rounded-xl text-sm font-semibold bg-white">
+                        <option value="baltic_birch">Premium Baltic Birch</option>
+                        <option value="crown_walnut">Architectural Crown Walnut</option>
+                        <option value="natural_oak">Sanded Natural Oak Finish</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label class="block text-xs font-bold uppercase text-stone-700 tracking-wider mb-2">4. Custom Additions & Integrated Utilities</label>
+                    <div class="flex gap-2">
+                      <input type="text" value={featureInput} onChange={(e) => setFeatureInput(e.target.value)} placeholder="E.g., Beverage sleeve, integrated cable channels, under-frame racks" class="flex-grow p-3 border border-[#EAE3D2] rounded-xl text-sm" />
+                      <button type="button" onClick={handleAddTag} class="bg-stone-800 text-white px-5 rounded-xl font-bold">+</button>
+                    </div>
+                    <div class="flex flex-wrap gap-2 mt-3">
+                      {customFeatures.map(feat => (
+                        <span key={feat} class="bg-red-50 text-[#943A3A] text-xs px-3 py-1.5 rounded-lg border border-red-100 flex items-center gap-1 font-bold">
+                          {feat}
+                          <button type="button" onClick={() => handleRemoveTag(feat)} class="text-stone-400 font-bold ml-1 hover:text-[#943A3A]">×</button>
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                      <label class="block text-xs font-bold uppercase text-stone-700 tracking-wider mb-2">5. Description & Build Instructions</label>
+                      <textarea required value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Type specific spacing guidelines or design notes..." class="w-full p-3 border border-[#EAE3D2] rounded-xl h-24 resize-none text-sm" />
+                    </div>
+                    <div>
+                      <label class="block text-xs font-bold uppercase text-stone-700 tracking-wider mb-2">6. Plan Geometry Metric Dimensions</label>
+                      <input required type="text" value={dimensions} onChange={(e) => setDimensions(e.target.value)} placeholder="E.g., W: 75cm, D: 30cm, H: 105cm" class="w-full p-3 border border-[#EAE3D2] rounded-xl text-sm" />
+                    </div>
+                  </div>
+
+                  <button type="submit" disabled={isSubmitting} class="w-full bg-[#943A3A] hover:bg-red-800 text-white py-4 rounded-xl font-bold uppercase tracking-wider text-xs">
+                    {isSubmitting ? 'Transmitting Blueprints...' : 'Save Specifications to Track Pad'}
+                  </button>
+                </div>
+              </div>
+            </form>
+          )}
+        </div>
+      );
+    }
+
+    function ShowcaseView({ onLoadTemplate }) {
+      return (
+        <div class="max-w-6xl mx-auto p-4 py-12">
+          <div class="text-center mb-12">
+            <h2 class="text-3xl font-black mt-3 text-stone-900 uppercase tracking-wide">Design Inlays & Catalog</h2>
+            <p class="text-stone-600 mt-2 font-medium">Configure built variations constructed in our architectural custom shop.</p>
+          </div>
+          <div class="grid md:grid-cols-2 gap-8">
+            {PRESET_TEMPLATES.map(post => (
+              <div key={post.id} class="bg-white rounded-3xl border border-[#EAE3D2] overflow-hidden shadow-sm flex flex-col justify-between">
+                <div>
+                  <img src={post.imgUrl} alt={post.title} class="w-full h-56 object-cover" />
+                  <div class="p-6 space-y-4">
+                    <h3 class="font-extrabold text-lg text-stone-900">{post.title}</h3>
+                    <p class="text-xs text-stone-600 leading-relaxed">{post.desc}</p>
+                    <div class="flex flex-wrap gap-1.5 pt-2">
+                      {post.features.map(f => (
+                        <span key={f} class="bg-[#FAF7F2] border border-[#EAE3D2] text-[9px] font-bold uppercase text-stone-600 px-2 py-0.5 rounded">{f}</span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <div class="p-6 pt-0">
+                  <button onClick={() => onLoadTemplate(post)} class="w-full py-3 bg-[#F2ECE1] border border-[#EAE3D2] text-stone-700 hover:text-[#943A3A] hover:border-[#943A3A] rounded-xl text-xs font-bold uppercase tracking-wider transition-all">Configure This Layout</button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    function ProfileView() {
+      const [localOrders, setLocalOrders] = useState([]);
+
+      useEffect(() => {
+        const saved = JSON.parse(localStorage.getItem('AKKU_LOCAL_ORDERS') || '[]');
+        setLocalOrders(saved);
+      }, []);
+
+      return (
+        <div class="max-w-4xl mx-auto p-4 py-12 space-y-8">
+          <div class="bg-white border border-[#EAE3D2] rounded-3xl p-8 shadow-sm">
+            <h2 class="text-xl font-black mb-1 uppercase tracking-wide">Job Specifications Tracker</h2>
+            <p class="text-stone-500 text-xs uppercase font-mono">Device-Level Active Blueprint Dashboard</p>
+
+            <div class="mt-8 space-y-6">
+              {localOrders.length === 0 ? (
+                <div class="text-center py-12 border border-dashed border-[#EAE3D2] rounded-2xl bg-[#FAF7F2]/50">
+                  <p class="text-xs text-stone-500 font-bold uppercase tracking-wider">No active build matrices mapped yet</p>
+                </div>
+              ) : (
+                localOrders.map((ord, idx) => (
+                  <div key={idx} class="flex flex-col md:flex-row gap-6 p-6 border border-[#EAE3D2] rounded-2xl bg-[#FAF7F2]/40">
+                    {ord.visualData && (
+                      <div class="w-full md:w-36 h-28 bg-white border border-[#EAE3D2] rounded-xl overflow-hidden flex items-center justify-center flex-shrink-0">
+                        <img src={ord.visualData} class="max-h-full max-w-full object-contain" />
+                      </div>
+                    )}
+                    <div class="flex-grow space-y-2">
+                      <div class="flex justify-between items-center">
+                        <h4 class="font-extrabold text-sm uppercase text-stone-800">Custom Engineering Setup</h4>
+                        <span class="px-2.5 py-1 bg-yellow-50 text-yellow-800 border border-yellow-200 rounded-full text-[10px] font-bold">Local Spec Matrix Active</span>
+                      </div>
+                      <p class="text-xs text-stone-600">{ord.description}</p>
+                      <div class="text-[11px] font-semibold text-stone-500">Dimensions: {ord.dimensions}</div>
+                      <div class="flex flex-wrap gap-1 pt-1">
+                        <span class="bg-white border border-[#EAE3D2] text-[9px] font-bold px-2 py-0.5 rounded uppercase">{ord.metalFinish.replace('_',' ')}</span>
+                        <span class="bg-white border border-[#EAE3D2] text-[9px] font-bold px-2 py-0.5 rounded uppercase">{ord.plywoodFace.replace('_',' ')}</span>
+                        {ord.customFeatures.map(feat => (
+                          <span key={feat} class="bg-red-50 text-[#943A3A] text-[9px] font-bold px-2 py-0.5 rounded uppercase">{feat}</span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>
