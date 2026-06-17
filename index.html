@@ -1,123 +1,128 @@
-import React from 'react';
-import Header from './components/Header';
-import UploadForm from './components/UploadForm';
-import DrawingCanvas from './components/DrawingCanvas';
-import Gallery from './components/Gallery';
-import Login from './components/Login';
-import Signup from './components/Signup';
-import './App.css';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akku | Custom Furniture Manufacturing</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        beige: '#FDFBF7',
+                        akkuRed: '#8B3A3A',
+                        akkuDark: '#1A1A1A'
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FDFBF7;
+            color: #1A1A1A;
+        }
+        .canvas-container canvas {
+            cursor: crosshair;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
 
-function App() {
-  return (
-    <div className="app">
-      <Header />
-      <Login />
-      <Signup />
-      <UploadForm />
-      <DrawingCanvas />
-      <Gallery />
-    </div>
-  );
-}
+    <nav class="bg-beige border-b border-akkuRed/20 sticky top-0 z-50 px-4 py-3 shadow-sm">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('home')">
+                <svg width="45" height="45" viewBox="0 0 100 100" class="fill-current text-akkuRed">
+                    <polygon points="50,15 90,85 10,85" />
+                    <circle cx="50" cy="45" r="8" fill="#FDFBF7" />
+                    <circle cx="35" cy="70" r="8" fill="#FDFBF7" />
+                    <circle cx="65" cy="70" r="8" fill="#FDFBF7" />
+                </svg>
+                <span class="text-2xl font-black tracking-wider text-akkuDark">AKKU</span>
+            </div>
 
-export default App;
-        import React, { useState } from 'react';
+            <div class="hidden md:flex space-x-8 font-semibold text-akkuDark">
+                <button onclick="switchTab('home')" class="hover:text-akkuRed transition">Home</button>
+                <button onclick="switchTab('create')" class="hover:text-akkuRed transition">Design Studio</button>
+                <button onclick="switchTab('showcase')" class="hover:text-akkuRed transition">Community Showcase</button>
+            </div>
 
-function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+            <div id="auth-nav-zone" class="flex items-center space-x-4">
+                </div>
+        </div>
+    </nav>
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    alert(`Logged in as ${email}`);
-  };
+    <main class="flex-grow max-w-7xl w-full mx-auto p-4 md:p-8">
+        
+        <section id="view-auth" class="hidden max-w-md mx-auto my-12 bg-white border border-akkuRed/20 p-8 rounded-xl shadow-xl">
+            <div class="text-center mb-6">
+                <h2 id="auth-title" class="text-2xl font-bold text-akkuDark">Welcome to Akku</h2>
+                <p id="auth-subtitle" class="text-sm text-gray-600 mt-1">Sign in to start creating custom furniture</p>
+            </div>
+            <form id="auth-form" onsubmit="handleAuth(event)" class="space-y-4">
+                <input type="hidden" id="auth-mode" value="login">
+                <div>
+                    <label class="block text-sm font-bold mb-1">Email Address</label>
+                    <input type="email" id="auth-email" required class="w-full p-2 border border-akkuDark bg-beige rounded focus:outline-none focus:border-akkuRed">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold mb-1">Password</label>
+                    <input type="password" id="auth-password" required class="w-full p-2 border border-akkuDark bg-beige rounded focus:outline-none focus:border-akkuRed">
+                </div>
+                <div id="auth-extra-fields" class="hidden space-y-4">
+                    <div>
+                        <label class="block text-sm font-bold mb-1">Full Name</label>
+                        <input type="text" id="auth-name" class="w-full p-2 border border-akkuDark bg-beige rounded focus:outline-none focus:border-akkuRed">
+                    </div>
+                </div>
+                <button type="submit" class="w-full bg-akkuRed text-white py-2 font-bold rounded hover:bg-opacity-90 transition">Submit</button>
+            </form>
+            <div class="text-center mt-4">
+                <button onclick="toggleAuthMode()" id="auth-toggle-btn" class="text-sm text-akkuRed underline font-medium">Don't have an account? Sign Up</button>
+            </div>
+        </section>
 
-  return (
-    <form onSubmit={handleLogin}>
-      <h2>Login</h2>
-      <input type="email" placeholder="Email" value={email} onChange={(e)=>setEmail(e.target.value)} />
-      <input type="password" placeholder="Password" value={password} onChange={(e)=>setPassword(e.target.value)} />
-      <button type="submit">Login</button>
-    </form>
-  );
-}
+        <section id="view-home" class="space-y-12">
+            <div class="text-center max-w-3xl mx-auto space-y-4 py-12">
+                <h1 class="text-4xl md:text-6xl font-black text-akkuDark leading-tight">You Sketch It.<br>We Manufacture It.</h1>
+                <p class="text-lg text-gray-700">Bring your unique furniture ideas to life. Upload reference photos, modify existing dimensions, draw blueprints natively, and let our expert craftsmen build it for you securely.</p>
+                <div class="pt-4">
+                    <button onclick="switchTab('create')" class="bg-akkuRed text-white px-8 py-3 font-bold text-lg rounded-lg shadow-lg hover:bg-opacity-90 transition">Start Your Custom Design</button>
+                </div>
+            </div>
+        </section>
 
-export default Login;
-import React, { useState } from 'react';
+        <section id="view-create" class="hidden space-y-8">
+            <div class="border-b border-akkuRed/20 pb-4">
+                <h2 class="text-3xl font-black text-akkuDark">Design Studio</h2>
+                <p class="text-gray-600">Provide visuals, dimensions, and customized feature requirements below.</p>
+            </div>
 
-function Signup() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="space-y-6">
+                    <div class="bg-white p-4 border border-akkuDark rounded-xl">
+                        <label class="block text-md font-bold mb-2 flex justify-between items-center">
+                            <span><i class="fa-solid fa-pen-ruler mr-2"></i>Draw Your Concept</span>
+                            <button onclick="clearCanvas()" class="text-xs text-akkuRed underline font-bold"><i class="fa-solid fa-trash-can mr-1"></i>Clear Canvas</button>
+                        </label>
+                        <div class="canvas-container bg-beige border border-dashed border-akkuDark/30 rounded-lg overflow-hidden">
+                            <canvas id="furniture-canvas" width="500" height="350" class="w-full h-auto"></canvas>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-2">Use your mouse or touchscreen to draft basic dimensions or aesthetic layouts.</p>
+                    </div>
 
-  const handleSignup = (e) => {
-    e.preventDefault();
-    alert(`Account created for ${email}`);
-  };
+                    <div class="bg-white p-4 border border-akkuDark rounded-xl">
+                        <label class="block text-md font-bold mb-2"><i class="fa-solid fa-cloud-arrow-up mr-2"></i>Upload Reference Images (Optional)</label>
+                        <input type="file" id="design-upload" accept="image/*" class="w-full p-2 bg-beige border border-akkuDark rounded">
+                    </div>
+                </div>
 
-  return (
-    <form onSubmit={handleSignup}>
-      <h2>Signup</h2>
-      <input type="email" placeholder="Email" value={email} onChange={(e)=>setEmail(e.target.value)} />
-      <input type="password" placeholder="Password" value={password} onChange={(e)=>setPassword(e.target.value)} />
-      <button type="submit">Signup</button>
-    </form>
-  );
-}
-
-export default Signup;
-import mongoose from 'mongoose';
-
-const userSchema = new mongoose.Schema({
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true }
-});
-
-export default mongoose.model('User', userSchema);
-import express from 'express';
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import User from '../models/User.js';
-
-const router = express.Router();
-
-// Signup
-router.post('/signup', async (req, res) => {
-  const { email, password } = req.body;
-  const hashed = await bcrypt.hash(password, 10);
-  const user = new User({ email, password: hashed });
-  await user.save();
-  res.json({ message: 'User created' });
-});
-
-// Login
-router.post('/login', async (req, res) => {
-  const { email, password } = req.body;
-  const user = await User.findOne({ email });
-  if (!user) return res.status(400).json({ error: 'User not found' });
-  const valid = await bcrypt.compare(password, user.password);
-  if (!valid) return res.status(400).json({ error: 'Invalid password' });
-  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-  res.json({ token });
-});
-
-export default router;
-import express from 'express';
-import mongoose from 'mongoose';
-import cors from 'cors';
-import dotenv from 'dotenv';
-import userRoutes from './routes/user.js';
-
-dotenv.config();
-const app = express();
-app.use(cors());
-app.use(express.json());
-
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log('MongoDB connected'))
-  .catch(err => console.error(err));
-
-app.use('/api/user', userRoutes);
-
-app.get('/', (req, res) => res.send('Akku Furniture API running'));
-
-app.listen(5000, () => console.log('Server started on port 5000'));
+                <div class="bg-white p-6 border border-akkuDark rounded-xl space-y-4">
+                    <h3 class="text-lg font-bold border-b pb-2 text-akkuRed">Furniture Specifications</h3>
+                    
+                    <div>
+                        <label class="block text-sm font-bold mb-1">Describe adjustments or feature requests</label>
+                        <textarea id="design-desc" rows
