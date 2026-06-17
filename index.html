@@ -22,10 +22,10 @@
   </script>
 
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=300;400;500;600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
     body { font-family: 'Plus Jakarta Sans', sans-serif; }
-    .app-view { display: none; }
-    .app-view.active { display: block; }
+    .view-pane { display: none; }
+    .view-pane.active { display: block; }
   </style>
 </head>
 <body class="bg-[#FAF7F2] text-[#2D2A26] min-h-screen flex flex-col justify-between selection:bg-red-50 selection:text-red-900">
@@ -34,7 +34,7 @@
     <div class="max-w-6xl mx-auto px-4">
       <div class="flex justify-between items-center h-20">
         <div class="flex items-center gap-3 cursor-pointer" onclick="switchView('home')">
-          <svg width="40" height="40" viewBox="0 0 100 100" fill="none" class="inline-block">
+          <svg width="40" height="40" viewBox="0 0 100 100" fill="none">
             <polygon points="50,15 90,85 10,85" fill="#943A3A" stroke="#943A3A" stroke-width="2" stroke-linejoin="round" />
             <circle cx="50" cy="46" r="7.5" fill="white" />
             <circle cx="37" cy="68" r="7.5" fill="white" />
@@ -47,10 +47,10 @@
         </div>
         
         <div class="flex items-center gap-1">
-          <button onclick="switchView('home')" id="nav-btn-home" class="nav-target-btn px-3 py-2 rounded-lg font-bold text-xs uppercase tracking-wider text-[#943A3A] bg-[#F2ECE1]">Home</button>
-          <button onclick="switchView('design')" id="nav-btn-design" class="nav-target-btn px-3 py-2 rounded-lg font-bold text-xs uppercase tracking-wider text-stone-700 hover:bg-[#F2ECE1]">Design Pad</button>
-          <button onclick="switchView('showcase')" id="nav-btn-showcase" class="nav-target-btn px-3 py-2 rounded-lg font-bold text-xs uppercase tracking-wider text-stone-700 hover:bg-[#F2ECE1]">Inspirations</button>
-          <button onclick="switchView('profile')" id="nav-btn-profile" class="nav-target-btn px-3 py-2 rounded-lg font-bold text-xs uppercase tracking-wider text-stone-700 hover:bg-[#F2ECE1]">Track Order</button>
+          <button onclick="switchView('home')" id="nav-home" class="nav-btn px-3 py-2 rounded-lg font-bold text-xs uppercase tracking-wider text-[#943A3A] bg-[#F2ECE1]">Home</button>
+          <button onclick="switchView('design')" id="nav-design" class="nav-btn px-3 py-2 rounded-lg font-bold text-xs uppercase tracking-wider text-stone-700 hover:bg-[#F2ECE1]">Design Pad</button>
+          <button onclick="switchView('showcase')" id="nav-showcase" class="nav-btn px-3 py-2 rounded-lg font-bold text-xs uppercase tracking-wider text-stone-700 hover:bg-[#F2ECE1]">Inspirations</button>
+          <button onclick="switchView('profile')" id="nav-profile" class="nav-btn px-3 py-2 rounded-lg font-bold text-xs uppercase tracking-wider text-stone-700 hover:bg-[#F2ECE1]">Track Order</button>
         </div>
       </div>
     </div>
@@ -58,8 +58,8 @@
 
   <main class="flex-grow">
     
-    <section id="view-home" class="app-view active animate-in fade-in duration-300">
-      <div class="relative bg-[#F5EFE6] text-[#2D2A26] overflow-hidden border-b border-[#EAE3D2]">
+    <section id="view-home" class="view-pane active animate-in fade-in duration-300">
+      <div class="relative bg-[#F5EFE6] text-[#2D2A26] border-b border-[#EAE3D2]">
         <div class="relative max-w-6xl mx-auto px-6 py-24 text-center z-10">
           <h1 class="font-sans text-4xl sm:text-6xl font-black tracking-tight mb-6">
             Steel Structural Strength. <br/><span class="text-[#943A3A]">Smooth Plywood Aesthetics.</span>
@@ -67,73 +67,72 @@
           <p class="text-stone-700 max-w-2xl mx-auto mb-10 font-semibold">
             Custom steel frames married with organic plywood coverings. Robust, minimalist, built for your exact space.
           </p>
-          <button onclick="switchView('design')" class="bg-[#943A3A] text-white px-8 py-4 rounded-xl font-bold text-xs uppercase tracking-wider shadow-sm transition-transform hover:bg-red-800">
+          <button onclick="switchView('design')" class="bg-[#943A3A] text-white px-8 py-4 rounded-xl font-bold text-xs uppercase tracking-wider shadow-sm transition-all hover:bg-red-800">
             Interactive Design Pad
           </button>
         </div>
       </div>
     </section>
 
-    <section id="view-design" class="app-view max-w-4xl mx-auto p-4 py-12">
-      <h2 class="text-3xl font-black mb-8 uppercase text-center tracking-wide">Design Pad</h2>
+    <section id="view-design" class="view-pane max-w-4xl mx-auto p-4 py-12">
+      <h2 class="text-3xl font-black mb-8 uppercase text-center tracking-wide">Design Pad Studio</h2>
       
-      <div id="blueprintFormFrame">
-        <form onsubmit="executeBuildSubmit(event)" class="bg-white p-8 md:p-10 rounded-3xl border border-[#EAE3D2] shadow-sm space-y-6">
+      <div id="studio-form-panel">
+        <form onsubmit="handleWorkspaceSubmit(event)" class="bg-white p-8 md:p-10 rounded-3xl border border-[#EAE3D2] shadow-sm space-y-6">
           <div>
             <label class="block font-bold text-xs uppercase mb-2 text-stone-700 tracking-wider">1. Describe your furniture concept</label>
-            <textarea id="conceptTextInput" required class="w-full h-32 p-4 border border-[#EAE3D2] rounded-xl text-sm focus:outline-none focus:border-[#943A3A]" placeholder="Describe your structural alterations, custom shapes, framing adjustments..."></textarea>
+            <textarea id="studio-description" required class="w-full h-32 p-4 border border-[#EAE3D2] rounded-xl text-sm focus:outline-none focus:border-[#943A3A]" placeholder="Type structural alterations, custom shapes, framing adjustments..."></textarea>
           </div>
 
           <div>
             <label class="block font-bold text-xs uppercase mb-2 text-stone-700 tracking-wider">2. Plan Geometry Dimensions</label>
-            <input id="metricDimInput" required class="w-full p-4 border border-[#EAE3D2] rounded-xl text-sm focus:outline-none focus:border-[#943A3A]" placeholder="Dimensions" />
+            <input id="studio-dimensions" required class="w-full p-4 border border-[#EAE3D2] rounded-xl text-sm focus:outline-none focus:border-[#943A3A]" placeholder="E.g., Table: 150x80x75cm, Bench: 120x35x45cm" />
           </div>
           
           <div>
-            <label class="block font-bold text-xs uppercase mb-2 text-stone-700 tracking-wider">3. Custom Add-ons</label>
+            <label class="block font-bold text-xs uppercase mb-2 text-stone-700 tracking-wider">3. Custom Add-ons & Integrated Utilities</label>
             <div class="flex gap-2 mb-3">
-              <input id="addonTagInput" class="flex-grow p-3 border border-[#EAE3D2] rounded-xl text-sm focus:outline-none focus:border-[#943A3A]" placeholder="Add feature (e.g., Phone holder)" />
-              <button type="button" onclick="injectAddonTag()" class="bg-[#2D2A26] text-white px-5 rounded-xl font-black text-lg hover:bg-stone-800">+</button>
+              <input id="studio-tag-input" class="flex-grow p-3 border border-[#EAE3D2] rounded-xl text-sm focus:outline-none focus:border-[#943A3A]" placeholder="Add features (e.g., Heavy-duty brackets, phone holder)" />
+              <button type="button" onclick="addCustomFeatureTag()" class="bg-[#2D2A26] text-white px-5 rounded-xl font-black text-lg hover:bg-stone-800">+</button>
             </div>
-            <div id="dynamicTagsDestinationBox" class="flex flex-wrap gap-2"></div>
+            <div id="studio-tags-container" class="flex flex-wrap gap-2"></div>
           </div>
 
           <button type="submit" class="w-full bg-[#943A3A] hover:bg-red-800 text-white py-4 rounded-xl font-bold uppercase text-xs tracking-wider transition-colors shadow-sm">
-            Submit to Workshop
+            Submit to Fabrication Queue
           </button>
         </form>
       </div>
 
-      <div id="blueprintSuccessFrame" class="hidden bg-white rounded-3xl p-12 text-center border border-[#EAE3D2] shadow-sm max-w-2xl mx-auto">
+      <div id="studio-success-panel" class="hidden bg-white rounded-3xl p-12 text-center border border-[#EAE3D2] shadow-sm max-w-2xl mx-auto">
         <div class="text-emerald-600 bg-emerald-50 p-3 rounded-full text-2xl w-14 h-14 flex items-center justify-center mx-auto mb-4 font-bold">✓</div>
         <h2 class="text-2xl font-black mb-4 uppercase">Design Confirmed</h2>
-        <button onclick="revertStudioLayout()" class="bg-[#943A3A] text-white px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-wider">
-          New Design
+        <p class="text-stone-600 mb-6 text-sm font-semibold">Your blueprint configurations have been locked inside the workshop queue.</p>
+        <button onclick="resetWorkspaceStudio()" class="bg-[#943A3A] text-white px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-wider">
+          Create Another Design
         </button>
       </div>
     </section>
 
-    <section id="view-showcase" class="app-view max-w-6xl mx-auto p-4 py-12">
-      <h2 class="text-3xl font-black mb-10 uppercase text-center tracking-wide">Inspiration Feed</h2>
+    <section id="view-showcase" class="view-pane max-w-6xl mx-auto p-4 py-12">
+      <h2 class="text-3xl font-black mb-2 uppercase text-center tracking-wide">Inspiration Feed</h2>
+      <p class="text-center text-stone-500 font-semibold text-sm mb-10">Select a layout baseline to import configuration matrices directly</p>
       
-      <div class="grid md:grid-cols-2 lg:grid-cols-2 gap-8">
+      <div class="grid md:grid-cols-2 gap-8">
         <div class="bg-white rounded-3xl overflow-hidden border border-[#EAE3D2] shadow-sm flex flex-col justify-between">
           <div>
             <img src="https://images.unsplash.com/photo-1595428774223-ef52624120d2?auto=format&fit=crop&w=800&q=80" class="w-full h-64 object-cover" />
             <div class="p-6 space-y-3">
-              <h3 class="font-bold text-lg text-stone-900">Deccan 5-Tier Organiser (Ref: image_13.png)</h3>
-              <p class="text-xs text-stone-600 leading-relaxed font-semibold">Inspired by the multi-tier entryway storage seen in image_13.png. Built with matte black industrial piping supports and dark-walnut veneered plywood shelves. Perfect for heavy footwear loads.</p>
-              <div class="flex flex-wrap gap-1 pt-2">
-                <span class="bg-[#FAF7F2] border border-[#EAE3D2] text-[10px] font-bold text-stone-600 px-2.5 py-1 rounded-md uppercase">Matte Black Pipe Structure</span>
-                <span class="bg-[#FAF7F2] border border-[#EAE3D2] text-[10px] font-bold text-stone-600 px-2.5 py-1 rounded-md uppercase">Heavy-Duty Shoe Capacity</span>
-                <span class="bg-[#FAF7F2] border border-[#EAE3D2] text-[10px] font-bold text-stone-600 px-2.5 py-1 rounded-md uppercase">Modern Minimalist Entryway</span>
+              <h3 class="font-extrabold text-lg text-stone-900">Deccan 5-Tier Organiser (Ref: image_13.png)</h3>
+              <p class="text-xs text-stone-600 font-semibold">Inspired by the multi-tier entryway storage seen in image_13.png. Built with matte black industrial piping supports and dark-walnut veneered plywood shelves.</p>
+              <div class="flex flex-wrap gap-1.5 pt-1">
+                <span class="bg-[#FAF7F2] border border-[#EAE3D2] text-[10px] font-bold text-stone-600 px-2 py-0.5 rounded uppercase">Matte Black Pipe Structure</span>
+                <span class="bg-[#FAF7F2] border border-[#EAE3D2] text-[10px] font-bold text-stone-600 px-2 py-0.5 rounded uppercase">Heavy-Duty Shoe Capacity</span>
               </div>
             </div>
           </div>
           <div class="p-6 pt-0">
-            <button onclick="mountBaselinePreset('Deccan 5-Tier Organiser', 'W: 90cm, D: 32cm, H: 110cm', ['Matte Black Pipe Structure', 'Heavy-Duty Shoe Capacity', 'Modern Minimalist Entryway'])" class="w-full bg-[#F2ECE1] border border-[#EAE3D2] py-3 rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-[#EAE3D2] text-stone-800 transition-colors">
-              Configure Layout
-            </button>
+            <button onclick="injectPresetIntoStudio('Deccan 5-Tier Organiser', 'W: 90cm, D: 32cm, H: 110cm', ['Matte Black Pipe Structure', 'Heavy-Duty Shoe Capacity'])" class="w-full bg-[#F2ECE1] border border-[#EAE3D2] py-3 rounded-xl font-bold text-xs uppercase text-stone-800 hover:bg-[#EAE3D2]">Configure Layout</button>
           </div>
         </div>
 
@@ -141,19 +140,16 @@
           <div>
             <img src="https://images.unsplash.com/photo-1530017758801-447a4c7e6822?auto=format&fit=crop&w=800&q=80" class="w-full h-64 object-cover" />
             <div class="p-6 space-y-3">
-              <h3 class="font-bold text-lg text-stone-900">Rajpath Dining Combo (Ref: image_14.png)</h3>
-              <p class="text-xs text-stone-600 leading-relaxed font-semibold">Designed after the set in image_14.png. A solid structural dining table featuring a black powdercoated steel chassis with a crown-cut walnut plywood top, paired with a matching structural bench.</p>
-              <div class="flex flex-wrap gap-1 pt-2">
-                <span class="bg-[#FAF7F2] border border-[#EAE3D2] text-[10px] font-bold text-stone-600 px-2.5 py-1 rounded-md uppercase">Steel Frame Integrity</span>
-                <span class="bg-[#FAF7F2] border border-[#EAE3D2] text-[10px] font-bold text-stone-600 px-2.5 py-1 rounded-md uppercase">Generational Walnut Finish</span>
-                <span class="bg-[#FAF7F2] border border-[#EAE3D2] text-[10px] font-bold text-stone-600 px-2.5 py-1 rounded-md uppercase">Matching Storage Bench</span>
+              <h3 class="font-extrabold text-lg text-stone-900">Rajpath Dining Combo (Ref: image_14.png)</h3>
+              <p class="text-xs text-stone-600 font-semibold">Designed after the set in image_14.png. A solid structural dining table featuring a black powdercoated steel chassis with a crown-cut walnut plywood top.</p>
+              <div class="flex flex-wrap gap-1.5 pt-1">
+                <span class="bg-[#FAF7F2] border border-[#EAE3D2] text-[10px] font-bold text-stone-600 px-2 py-0.5 rounded uppercase">Steel Frame Integrity</span>
+                <span class="bg-[#FAF7F2] border border-[#EAE3D2] text-[10px] font-bold text-stone-600 px-2 py-0.5 rounded uppercase">Generational Walnut</span>
               </div>
             </div>
           </div>
           <div class="p-6 pt-0">
-            <button onclick="mountBaselinePreset('Rajpath Dining Combo', 'Table: 150x80x75cm, Bench: 120x35x45cm', ['Steel Frame Integrity', 'Generational Walnut Finish', 'Matching Storage Bench'])" class="w-full bg-[#F2ECE1] border border-[#EAE3D2] py-3 rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-[#EAE3D2] text-stone-800 transition-colors">
-              Configure Layout
-            </button>
+            <button onclick="injectPresetIntoStudio('Rajpath Dining Combo', 'Table: 150x80x75cm, Bench: 120x35x45cm', ['Steel Frame Integrity', 'Generational Walnut Finish'])" class="w-full bg-[#F2ECE1] border border-[#EAE3D2] py-3 rounded-xl font-bold text-xs uppercase text-stone-800 hover:bg-[#EAE3D2]">Configure Layout</button>
           </div>
         </div>
 
@@ -161,19 +157,16 @@
           <div>
             <img src="https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=800&q=80" class="w-full h-64 object-cover" />
             <div class="p-6 space-y-3">
-              <h3 class="font-bold text-lg text-stone-900">Coromandel Corner Column (Ref: image_12.png)</h3>
-              <p class="text-xs text-stone-600 leading-relaxed font-semibold">The corner display column style featured in image_12.png. Welded vertical tubular steel frame supports thick plywood corner plates, ideal for showcasing decor in tight architectural spaces.</p>
-              <div class="flex flex-wrap gap-1 pt-2">
-                <span class="bg-[#FAF7F2] border border-[#EAE3D2] text-[10px] font-bold text-stone-600 px-2.5 py-1 rounded-md uppercase">Tri-point stable iron columns</span>
-                <span class="bg-[#FAF7F2] border border-[#EAE3D2] text-[10px] font-bold text-stone-600 px-2.5 py-1 rounded-md uppercase">Baltic Birch plates</span>
-                <span class="bg-[#FAF7F2] border border-[#EAE3D2] text-[10px] font-bold text-stone-600 px-2.5 py-1 rounded-md uppercase">Compact Footprint</span>
+              <h3 class="font-extrabold text-lg text-stone-900">Coromandel Corner Column (Ref: image_12.png)</h3>
+              <p class="text-xs text-stone-600 font-semibold">The display column style from image_12.png. Welded vertical tubular steel frame supporting thick plywood corner plates for tight spaces.</p>
+              <div class="flex flex-wrap gap-1.5 pt-1">
+                <span class="bg-[#FAF7F2] border border-[#EAE3D2] text-[10px] font-bold text-stone-600 px-2 py-0.5 rounded uppercase">Tri-Point Iron Columns</span>
+                <span class="bg-[#FAF7F2] border border-[#EAE3D2] text-[10px] font-bold text-stone-600 px-2 py-0.5 rounded uppercase">Baltic Birch Plates</span>
               </div>
             </div>
           </div>
           <div class="p-6 pt-0">
-            <button onclick="mountBaselinePreset('Coromandel Corner Column', 'W: 45cm, D: 45cm, H: 95cm', ['Tri-point stable iron columns', 'Baltic Birch plates', 'Compact Footprint'])" class="w-full bg-[#F2ECE1] border border-[#EAE3D2] py-3 rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-[#EAE3D2] text-stone-800 transition-colors">
-              Configure Layout
-            </button>
+            <button onclick="injectPresetIntoStudio('Coromandel Corner Column', 'W: 45cm, D: 45cm, H: 95cm', ['Tri-point iron columns', 'Baltic Birch plates'])" class="w-full bg-[#F2ECE1] border border-[#EAE3D2] py-3 rounded-xl font-bold text-xs uppercase text-stone-800 hover:bg-[#EAE3D2]">Configure Layout</button>
           </div>
         </div>
 
@@ -181,27 +174,24 @@
           <div>
             <img src="https://images.unsplash.com/photo-1560185007-c5ca9d2c014d?auto=format&fit=crop&w=800&q=80" class="w-full h-64 object-cover" />
             <div class="p-6 space-y-3">
-              <h3 class="font-bold text-lg text-stone-900">Malabar Structural Bench (Ref: image_11.png)</h3>
-              <p class="text-xs text-stone-600 leading-relaxed font-semibold">Capturing the industrial slatted look from image_11.png. Brushed raw steel loop frame with thick, flush-fitted natural oak plywood slats for maximum weight bearing and minimalist aesthetic.</p>
-              <div class="flex flex-wrap gap-1 pt-2">
-                <span class="bg-[#FAF7F2] border border-[#EAE3D2] text-[10px] font-bold text-stone-600 px-2.5 py-1 rounded-md uppercase">Brushed Steel Loop Frame</span>
-                <span class="bg-[#FAF7F2] border border-[#EAE3D2] text-[10px] font-bold text-stone-600 px-2.5 py-1 rounded-md uppercase">Flush Plywood Slats</span>
-                <span class="bg-[#FAF7F2] border border-[#EAE3D2] text-[10px] font-bold text-stone-600 px-2.5 py-1 rounded-md uppercase">Outdoor Grade Finish</span>
+              <h3 class="font-extrabold text-lg text-stone-900">Malabar Structural Bench (Ref: image_11.png)</h3>
+              <p class="text-xs text-stone-600 font-semibold">Capturing the industrial slatted look from image_11.png. Brushed steel loop frames with flush-fitted natural oak plywood slats.</p>
+              <div class="flex flex-wrap gap-1.5 pt-1">
+                <span class="bg-[#FAF7F2] border border-[#EAE3D2] text-[10px] font-bold text-stone-600 px-2 py-0.5 rounded uppercase">Brushed Steel Frame</span>
+                <span class="bg-[#FAF7F2] border border-[#EAE3D2] text-[10px] font-bold text-stone-600 px-2 py-0.5 rounded uppercase">Flush Oak Slats</span>
               </div>
             </div>
           </div>
           <div class="p-6 pt-0">
-            <button onclick="mountBaselinePreset('Malabar Structural Bench', 'W: 130cm, D: 38cm, H: 45cm', ['Brushed Steel Loop Frame', 'Flush Plywood Slats', 'Outdoor Grade Finish'])" class="w-full bg-[#F2ECE1] border border-[#EAE3D2] py-3 rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-[#EAE3D2] text-stone-800 transition-colors">
-              Configure Layout
-            </button>
+            <button onclick="injectPresetIntoStudio('Malabar Structural Bench', 'W: 130cm, D: 38cm, H: 45cm', ['Brushed Steel Loop Frame', 'Flush Plywood Slats'])" class="w-full bg-[#F2ECE1] border border-[#EAE3D2] py-3 rounded-xl font-bold text-xs uppercase text-stone-800 hover:bg-[#EAE3D2]">Configure Layout</button>
           </div>
         </div>
       </div>
     </section>
 
-    <section id="view-profile" class="app-view max-w-2xl mx-auto p-12 text-center my-12 border border-dashed border-[#EAE3D2] bg-white rounded-3xl shadow-sm">
+    <section id="view-profile" class="view-pane max-w-2xl mx-auto p-12 text-center my-12 border border-dashed border-[#EAE3D2] bg-white rounded-3xl shadow-sm">
       <div class="text-stone-400 text-3xl mb-2">⏳</div>
-      <p class="text-stone-600 text-sm font-semibold">No active build projects. Use the Design Pad to get started.</p>
+      <p class="text-stone-600 text-sm font-semibold">No active build projects in matrix queue. Use the Design Pad to get started.</p>
     </section>
 
   </main>
@@ -209,7 +199,7 @@
   <footer class="bg-[#F2ECE1] text-[#2D2A26] py-12 text-center border-t border-[#E6DEC4]">
     <div class="max-w-6xl mx-auto px-4 flex flex-col items-center gap-4">
       <div class="flex items-center gap-2">
-        <svg width="36" height="36" viewBox="0 0 100 100" fill="none" class="inline-block">
+        <svg width="36" height="36" viewBox="0 0 100 100" fill="none">
           <polygon points="50,15 90,85 10,85" fill="#943A3A" stroke="#943A3A" stroke-width="2" stroke-linejoin="round" />
           <circle cx="50" cy="46" r="7.5" fill="white" />
         </svg>
@@ -224,74 +214,74 @@
   </footer>
 
   <script>
-    let internalFeatureTagsArray = [];
+    let activeTags = [];
 
-    // Core Tab Navigation Controls
-    function switchView(targetViewId) {
-      document.querySelectorAll('.app-view').forEach(view => view.classList.remove('active'));
-      document.getElementById('view-' + targetViewId).classList.add('active');
+    // Navigation switching logic
+    function switchView(viewId) {
+      document.querySelectorAll('.view-pane').forEach(el => el.classList.remove('active'));
+      document.getElementById('view-' + viewId).classList.add('active');
 
-      document.querySelectorAll('.nav-target-btn').forEach(btn => {
+      document.querySelectorAll('.nav-btn').forEach(btn => {
         btn.classList.remove('text-[#943A3A]', 'bg-[#F2ECE1]');
         btn.classList.add('text-stone-700');
       });
-      const activeNavButton = document.getElementById('nav-btn-' + targetViewId);
-      activeNavButton.classList.remove('text-stone-700');
-      activeNavButton.classList.add('text-[#943A3A]', 'bg-[#F2ECE1]');
+      const currentTargetBtn = document.getElementById('nav-' + viewId);
+      currentTargetBtn.classList.remove('text-stone-700');
+      currentTargetBtn.classList.add('text-[#943A3A]', 'bg-[#F2ECE1]');
     }
 
-    // Interactive Tag Configuration Method
-    function injectAddonTag() {
-      const tagField = document.getElementById('addonTagInput');
-      const cleanVal = tagField.value.trim();
-      if(cleanVal && !internalFeatureTagsArray.includes(cleanVal)) {
-        internalFeatureTagsArray.push(cleanVal);
-        renderActiveTagsHTML();
-        tagField.value = '';
+    // Add Tag Handling
+    function addCustomFeatureTag() {
+      const field = document.getElementById('studio-tag-input');
+      const cleanVal = field.value.trim();
+      if(cleanVal && !activeTags.includes(cleanVal)) {
+        activeTags.push(cleanVal);
+        renderWorkspaceTags();
+        field.value = '';
       }
     }
 
-    function removeAddonTag(targetTag) {
-      internalFeatureTagsArray = internalFeatureTagsArray.filter(t => t !== targetTag);
-      renderActiveTagsHTML();
+    function removeCustomFeatureTag(target) {
+      activeTags = activeTags.filter(t => t !== target);
+      renderWorkspaceTags();
     }
 
-    function renderActiveTagsHTML() {
-      const parentBox = document.getElementById('dynamicTagsDestinationBox');
-      parentBox.innerHTML = '';
-      internalFeatureTagsArray.forEach(tag => {
-        parentBox.innerHTML += `
+    function renderWorkspaceTags() {
+      const destination = document.getElementById('studio-tags-container');
+      destination.innerHTML = '';
+      activeTags.forEach(tag => {
+        destination.innerHTML += `
           <span class="bg-[#F2ECE1] text-[#943A3A] font-bold px-3 py-1.5 rounded-lg text-xs flex items-center gap-2 border border-[#EAE3D2]">
-            ${tag} 
-            <button type="button" onclick="removeAddonTag('${tag}')" class="text-stone-400 hover:text-red-900 font-bold ml-1">×</button>
+            ${tag}
+            <button type="button" onclick="removeCustomFeatureTag('${tag}')" class="text-stone-400 hover:text-red-900 font-bold ml-0.5">×</button>
           </span>
         `;
       });
     }
 
-    // Direct Template Baseline Link Pipeline
-    function mountBaselinePreset(templateTitle, defaultMetricDimensions, baselineTags) {
-      document.getElementById('conceptTextInput').value = `Based on template: ${templateTitle}.\nModifications required: `;
-      document.getElementById('metricDimInput').value = defaultMetricDimensions;
-      internalFeatureTagsArray = [...baselineTags];
-      renderActiveTagsHTML();
+    // Catalog Pipeline Connection
+    function injectPresetIntoStudio(title, dimensions, presets) {
+      document.getElementById('studio-description').value = `Based on template: ${title}.\nModifications required: `;
+      document.getElementById('studio-dimensions').value = dimensions;
+      activeTags = [...presets];
+      renderWorkspaceTags();
       switchView('design');
     }
 
-    // Form Handling Methods
-    function executeBuildSubmit(event) {
-      event.preventDefault();
-      document.getElementById('blueprintFormFrame').classList.add('hidden');
-      document.getElementById('blueprintSuccessFrame').classList.remove('hidden');
+    // Form Submissions Controls
+    function handleWorkspaceSubmit(e) {
+      e.preventDefault();
+      document.getElementById('studio-form-panel').classList.add('hidden');
+      document.getElementById('studio-success-panel').classList.remove('hidden');
     }
 
-    function revertStudioLayout() {
-      document.getElementById('conceptTextInput').value = '';
-      document.getElementById('metricDimInput').value = '';
-      internalFeatureTagsArray = [];
-      renderActiveTagsHTML();
-      document.getElementById('blueprintSuccessFrame').classList.add('hidden');
-      document.getElementById('blueprintFormFrame').classList.remove('hidden');
+    function resetWorkspaceStudio() {
+      document.getElementById('studio-description').value = '';
+      document.getElementById('studio-dimensions').value = '';
+      activeTags = [];
+      renderWorkspaceTags();
+      document.getElementById('studio-success-panel').classList.add('hidden');
+      document.getElementById('studio-form-panel').classList.remove('hidden');
     }
   </script>
 </body>
