@@ -32,7 +32,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=300;400;500;600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
     body { font-family: 'Plus Jakarta Sans', sans-serif; }
   </style>
 </head>
@@ -43,7 +43,7 @@
   <script type="text/babel">
     const { useState, useEffect, useRef } = React;
 
-    // --- Firebase Initialization Engine ---
+    // --- Firebase Global Core Initializer ---
     let auth, db, appId;
     try {
       const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
@@ -54,10 +54,10 @@
       }
       appId = typeof __app_id !== 'undefined' ? __app_id : 'akku-furniture-app';
     } catch (error) {
-      console.error("Firebase Initialization Bypass:", error);
+      console.error("Firebase initializing verification bypass:", error);
     }
 
-    // --- Dynamic Lucide Renderer for All 21 Requested Icons ---
+    // --- Dynamic Unified Icon Renderer (Safely Maps All 21 Custom Icons) ---
     function LucideIcon({ name, size = 16, className = "" }) {
       const iconRef = useRef(null);
       useEffect(() => {
@@ -68,7 +68,7 @@
       return <i ref={iconRef} data-lucide={name} style={{ width: size, height: size }} className={`inline-block ${className}`}></i>;
     }
 
-    // --- All 4 Pristine Product Baseline Matrices ---
+    // --- Full Verified 4-Preset Design Catalog ---
     const PRESET_TEMPLATES = [
       {
         id: 'shoe_rack_shelf',
@@ -145,7 +145,7 @@
             } else {
               await auth.signInAnonymously();
             }
-          } catch (error) { console.error("Identity Engine Pass:", error); }
+          } catch (error) { console.error("Auth bypass handling:", error); }
         };
         initAuth();
         return auth.onAuthStateChanged(currentUser => setUser(currentUser));
@@ -154,27 +154,28 @@
       return (
         <div className="min-h-screen bg-[#FAF7F2] text-[#2D2A26] flex flex-col justify-between selection:bg-red-50 selection:text-red-900">
           
+          {/* Header Navbar Navigation Component */}
           <nav className="bg-[#FAF7F2]/95 backdrop-blur-md border-b border-[#EAE3D2] sticky top-0 z-50">
             <div className="max-w-6xl mx-auto px-4 h-20 flex justify-between items-center">
               <div className="flex items-center gap-3 cursor-pointer group" onClick={() => setCurrentView('home')}>
                 <AkkuLogo size={40} />
                 <div className="flex flex-col">
-                  <span class="font-sans font-black text-2xl tracking-widest text-[#2D2A26] leading-none">AKKU</span>
-                  <span class="text-[9px] uppercase tracking-widest font-bold text-[#943A3A] mt-1">Hybrid Systems</span>
+                  <span className="font-sans font-black text-2xl tracking-widest leading-none">AKKU</span>
+                  <span className="text-[9px] uppercase tracking-widest font-bold text-[#943A3A] mt-1">Hybrid Systems</span>
                 </div>
               </div>
               <div className="flex items-center gap-1">
-                <button onClick={() => setCurrentView('home')} className={`flex items-center gap-2 px-3 py-2 rounded-lg font-bold text-xs uppercase tracking-wider ${currentView === 'home' ? 'text-[#943A3A] bg-[#F2ECE1] border-b-2 border-[#943A3A]' : 'text-stone-700 hover:bg-[#F2ECE1]'}`}>
-                  <LucideIcon name="home" size={14} /> <span class="hidden md:inline">Home</span>
+                <button onClick={() => setCurrentView('home')} className={`flex items-center gap-1.5 px-3 py-2 rounded-lg font-bold text-xs uppercase tracking-wider ${currentView === 'home' ? 'text-[#943A3A] bg-[#F2ECE1] border-b-2 border-[#943A3A]' : 'text-stone-700'}`}>
+                  <LucideIcon name="home" size={14} /> <span class="hidden sm:inline">Home</span>
                 </button>
-                <button onClick={() => setCurrentView('design')} className={`flex items-center gap-2 px-3 py-2 rounded-lg font-bold text-xs uppercase tracking-wider ${currentView === 'design' ? 'text-[#943A3A] bg-[#F2ECE1] border-b-2 border-[#943A3A]' : 'text-stone-700 hover:bg-[#F2ECE1]'}`}>
-                  <LucideIcon name="pen-tool" size={14} /> <span class="hidden md:inline">Design Pad</span>
+                <button onClick={() => setCurrentView('design')} className={`flex items-center gap-1.5 px-3 py-2 rounded-lg font-bold text-xs uppercase tracking-wider ${currentView === 'design' ? 'text-[#943A3A] bg-[#F2ECE1] border-b-2 border-[#943A3A]' : 'text-stone-700'}`}>
+                  <LucideIcon name="pen-tool" size={14} /> <span class="hidden sm:inline">Design Pad</span>
                 </button>
-                <button onClick={() => setCurrentView('showcase')} className={`flex items-center gap-2 px-3 py-2 rounded-lg font-bold text-xs uppercase tracking-wider ${currentView === 'showcase' ? 'text-[#943A3A] bg-[#F2ECE1] border-b-2 border-[#943A3A]' : 'text-stone-700 hover:bg-[#F2ECE1]'}`}>
-                  <LucideIcon name="sparkles" size={14} /> <span class="hidden md:inline">Inspirations</span>
+                <button onClick={() => setCurrentView('showcase')} className={`flex items-center gap-1.5 px-3 py-2 rounded-lg font-bold text-xs uppercase tracking-wider ${currentView === 'showcase' ? 'text-[#943A3A] bg-[#F2ECE1] border-b-2 border-[#943A3A]' : 'text-stone-700'}`}>
+                  <LucideIcon name="sparkles" size={14} /> <span class="hidden sm:inline">Inspirations</span>
                 </button>
-                <button onClick={() => setCurrentView('profile')} className={`flex items-center gap-2 px-3 py-2 rounded-lg font-bold text-xs uppercase tracking-wider ${currentView === 'profile' ? 'text-[#943A3A] bg-[#F2ECE1] border-b-2 border-[#943A3A]' : 'text-stone-700 hover:bg-[#F2ECE1]'}`}>
-                  <LucideIcon name="user" size={14} /> <span class="hidden md:inline">Track Order</span>
+                <button onClick={() => setCurrentView('profile')} className={`flex items-center gap-1.5 px-3 py-2 rounded-lg font-bold text-xs uppercase tracking-wider ${currentView === 'profile' ? 'text-[#943A3A] bg-[#F2ECE1] border-b-2 border-[#943A3A]' : 'text-stone-700'}`}>
+                  <LucideIcon name="user" size={14} /> <span class="hidden sm:inline">Track Order</span>
                 </button>
               </div>
             </div>
@@ -259,7 +260,7 @@
               customFeatures,
               timestamp: firebase.firestore.FieldValue.serverTimestamp()
             });
-          } catch (err) { console.error("Firestore push bypass:", err); }
+          } catch (err) { console.error("Firestore localized matrix push skip:", err); }
         }
         setTimeout(() => {
           setIsSubmitting(false);
@@ -272,9 +273,9 @@
           <div className="max-w-2xl mx-auto p-12 text-center my-12 bg-white rounded-3xl border border-[#EAE3D2]">
             <LucideIcon name="check" size={48} className="mx-auto text-emerald-600 bg-emerald-50 p-2 rounded-full mb-4" />
             <h2 className="text-2xl font-black mb-4 uppercase">Design Confirmed</h2>
-            <p className="text-stone-600 mb-6 text-sm font-semibold">Your blueprint parameters have successfully synchronized into the fabrication matrix pipeline.</p>
+            <p className="text-stone-600 mb-6 text-sm font-semibold">Your custom specifications have successfully synchronized into the fabrication pipeline.</p>
             <button onClick={() => { setSubmitted(false); setDescription(''); setDimensions(''); setCustomFeatures([]); }} className="bg-[#943A3A] text-white px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-wider">
-              New Custom Layout
+              Configure Another Layout
             </button>
           </div>
         );
@@ -282,22 +283,22 @@
 
       return (
         <div className="max-w-4xl mx-auto p-4 py-12">
-          <h2 className="text-3xl font-black mb-8 uppercase text-center tracking-wide">Design Pad</h2>
+          <h2 className="text-3xl font-black mb-8 uppercase text-center tracking-wide">Design Pad Studio</h2>
           <form onSubmit={handleSubmit} className="bg-white p-8 md:p-10 rounded-3xl border border-[#EAE3D2] shadow-sm space-y-6">
             <div>
               <label className="block font-bold text-xs uppercase mb-2 text-stone-700 tracking-wider">1. Describe your furniture concept</label>
-              <textarea required className="w-full h-32 p-4 border border-[#EAE3D2] rounded-xl text-sm focus:outline-none focus:border-[#943A3A]" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Describe your structural adjustments, custom shapes, hardware specs..." />
+              <textarea required className="w-full h-32 p-4 border border-[#EAE3D2] rounded-xl text-sm focus:outline-none focus:border-[#943A3A]" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Type structural alterations, custom shapes, hardware configurations..." />
             </div>
 
             <div>
-              <label className="block font-bold text-xs uppercase mb-2 text-stone-700 tracking-wider">2. Plan Geometry Dimensions</label>
-              <input required className="w-full p-4 border border-[#EAE3D2] rounded-xl text-sm focus:outline-none focus:border-[#943A3A]" value={dimensions} onChange={(e) => setDimensions(e.target.value)} placeholder="E.g., Table: 150x80x75cm, Bench: 120x35x45cm" />
+              <label className="block font-bold text-xs uppercase mb-2 text-stone-700 tracking-wider">2. Plan Geometry Metric Dimensions</label>
+              <input required className="w-full p-4 border border-[#EAE3D2] rounded-xl text-sm focus:outline-none focus:border-[#943A3A]" value={dimensions} onChange={(e) => setDimensions(e.target.value)} placeholder="E.g., W: 90cm, D: 32cm, H: 110cm" />
             </div>
             
             <div>
-              <label className="block font-bold text-xs uppercase mb-2 text-stone-700 tracking-wider">3. Custom Add-ons & Integrated Utilities</label>
+              <label className="block font-bold text-xs uppercase mb-2 text-stone-700 tracking-wider">3. Custom Add-ons & Hardware Integrations</label>
               <div className="flex gap-2 mb-4">
-                <input className="flex-grow p-3 border border-[#EAE3D2] rounded-xl text-sm focus:outline-none focus:border-[#943A3A]" value={currentFeatureInput} onChange={(e) => setCurrentFeatureInput(e.target.value)} placeholder="Add features (e.g., Heavy-duty pipe couplers, integrated wireless nodes)" onKeyDown={(e) => { if(e.key==='Enter') { e.preventDefault(); handleAddFeatureTag(); } }} />
+                <input className="flex-grow p-3 border border-[#EAE3D2] rounded-xl text-sm focus:outline-none focus:border-[#943A3A]" value={currentFeatureInput} onChange={(e) => setCurrentFeatureInput(e.target.value)} placeholder="Add features (e.g., Industrial pipe joints, magnetic hooks)" onKeyDown={(e) => { if(e.key==='Enter') { e.preventDefault(); handleAddFeatureTag(); } }} />
                 <button type="button" onClick={handleAddFeatureTag} className="bg-[#2D2A26] text-white px-4 rounded-xl flex items-center justify-center hover:bg-stone-800"><LucideIcon name="plus-circle" size={18} /></button>
               </div>
               
@@ -311,7 +312,7 @@
             </div>
 
             <button type="submit" disabled={isSubmitting} className="w-full bg-[#943A3A] text-white py-4 rounded-xl font-bold uppercase text-xs tracking-wider transition-colors hover:bg-red-800">
-              {isSubmitting ? 'Transmitting Blueprints...' : 'Submit to Workshop Build Matrix'}
+              {isSubmitting ? 'Transmitting Build Array...' : 'Submit to Fabrication Matrix Queue'}
             </button>
           </form>
         </div>
@@ -322,8 +323,8 @@
       return (
         <div className="max-w-6xl mx-auto p-4 py-12">
           <h2 className="text-3xl font-black mb-2 uppercase text-center tracking-wide">Inspiration Feed</h2>
-          <p className="text-center text-stone-500 font-semibold text-sm mb-10">Select a structural baseline model to map baseline presets</p>
-          <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8">
+          <p className="text-center text-stone-500 font-semibold text-sm mb-10">Select a structural baseline layout to import configuration matrices</p>
+          <div className="grid md:grid-cols-2 gap-8">
             {PRESET_TEMPLATES.map(post => (
               <div key={post.id} className="bg-white rounded-3xl overflow-hidden border border-[#EAE3D2] shadow-sm flex flex-col justify-between">
                 <div>
