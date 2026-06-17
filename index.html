@@ -1,304 +1,123 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Akku | Custom Structural Steel & Plywood Furniture</title>
-  
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            brandCharcoal: '#2D2A26',
-            brandAlabaster: '#FAF7F2',
-            brandSand: '#F2ECE1',
-            brandCrimson: '#943A3A',
-          }
-        }
-      }
-    }
-  </script>
+import React from 'react';
+import Header from './components/Header';
+import UploadForm from './components/UploadForm';
+import DrawingCanvas from './components/DrawingCanvas';
+import Gallery from './components/Gallery';
+import Login from './components/Login';
+import Signup from './components/Signup';
+import './App.css';
 
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
-    body { font-family: 'Plus Jakarta Sans', sans-serif; }
-    .app-view { display: none; }
-    .app-view.active { display: block; }
-  </style>
-</head>
-<body class="bg-[#FAF7F2] text-[#2D2A26] min-h-screen flex flex-col justify-between selection:bg-red-50 selection:text-red-900">
-
-  <nav class="bg-[#FAF7F2]/95 backdrop-blur-md border-b border-[#EAE3D2] sticky top-0 z-50">
-    <div class="max-w-6xl mx-auto px-4">
-      <div class="flex justify-between items-center h-20">
-        <div class="flex items-center gap-3 cursor-pointer" onclick="switchView('home')">
-          <svg width="40" height="40" viewBox="0 0 100 100" fill="none" class="inline-block">
-            <polygon points="50,15 90,85 10,85" fill="#943A3A" stroke="#943A3A" stroke-width="2" stroke-linejoin="round" />
-            <circle cx="50" cy="46" r="7.5" fill="white" />
-            <circle cx="37" cy="68" r="7.5" fill="white" />
-            <circle cx="63" cy="68" r="7.5" fill="white" />
-          </svg>
-          <div class="flex flex-col">
-            <span class="font-sans font-black text-2xl tracking-widest text-[#2D2A26] leading-none">AKKU</span>
-            <span class="text-[9px] uppercase tracking-widest font-bold text-[#943A3A] mt-1">Hybrid Systems</span>
-          </div>
-        </div>
-        
-        <div class="flex items-center gap-1">
-          <button onclick="switchView('home')" id="nav-btn-home" class="nav-target-btn px-3 py-2 rounded-lg font-bold text-xs uppercase tracking-wider text-[#943A3A] bg-[#F2ECE1]">Home</button>
-          <button onclick="switchView('design')" id="nav-btn-design" class="nav-target-btn px-3 py-2 rounded-lg font-bold text-xs uppercase tracking-wider text-stone-700 hover:bg-[#F2ECE1]">Design Pad</button>
-          <button onclick="switchView('showcase')" id="nav-btn-showcase" class="nav-target-btn px-3 py-2 rounded-lg font-bold text-xs uppercase tracking-wider text-stone-700 hover:bg-[#F2ECE1]">Inspirations</button>
-          <button onclick="switchView('profile')" id="nav-btn-profile" class="nav-target-btn px-3 py-2 rounded-lg font-bold text-xs uppercase tracking-wider text-stone-700 hover:bg-[#F2ECE1]">Track Order</button>
-        </div>
-      </div>
+function App() {
+  return (
+    <div className="app">
+      <Header />
+      <Login />
+      <Signup />
+      <UploadForm />
+      <DrawingCanvas />
+      <Gallery />
     </div>
-  </nav>
+  );
+}
 
-  <main class="flex-grow">
-    
-    <section id="view-home" class="app-view active animate-in fade-in duration-300">
-      <div class="relative bg-[#F5EFE6] text-[#2D2A26] overflow-hidden border-b border-[#EAE3D2]">
-        <div class="relative max-w-6xl mx-auto px-6 py-24 text-center z-10">
-          <h1 class="font-sans text-4xl sm:text-6xl font-black tracking-tight mb-6">
-            Steel Structural Strength. <br/><span class="text-[#943A3A]">Smooth Plywood Aesthetics.</span>
-          </h1>
-          <p class="text-stone-700 max-w-2xl mx-auto mb-10 font-semibold">
-            Custom steel frames married with organic plywood coverings. Robust, minimalist, built for your exact space.
-          </p>
-          <button onclick="switchView('design')" class="bg-[#943A3A] text-white px-8 py-4 rounded-xl font-bold text-xs uppercase tracking-wider shadow-sm transition-transform hover:bg-red-800">
-            Interactive Design Pad
-          </button>
-        </div>
-      </div>
-    </section>
+export default App;
+        import React, { useState } from 'react';
 
-    <section id="view-design" class="app-view max-w-4xl mx-auto p-4 py-12">
-      <h2 class="text-3xl font-black mb-8 uppercase text-center tracking-wide">Design Pad Studio</h2>
-      
-      <div id="blueprintFormFrame">
-        <form onsubmit="executeBuildSubmit(event)" class="bg-white p-8 md:p-10 rounded-3xl border border-[#EAE3D2] shadow-sm space-y-6">
-          <div>
-            <label class="block font-bold text-xs uppercase mb-2 text-stone-700 tracking-wider">1. Describe your furniture concept</label>
-            <textarea id="conceptTextInput" required class="w-full h-32 p-4 border border-[#EAE3D2] rounded-xl text-sm focus:outline-none focus:border-[#943A3A]" placeholder="Describe your structural alterations, custom shapes, framing adjustments..."></textarea>
-          </div>
+function Login() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-          <div>
-            <label class="block font-bold text-xs uppercase mb-2 text-stone-700 tracking-wider">2. Plan Geometry Dimensions</label>
-            <input id="metricDimInput" required class="w-full p-4 border border-[#EAE3D2] rounded-xl text-sm focus:outline-none focus:border-[#943A3A]" placeholder="Dimensions" />
-          </div>
-          
-          <div>
-            <label class="block font-bold text-xs uppercase mb-2 text-stone-700 tracking-wider">3. Custom Add-ons & Hardware Options</label>
-            <div class="flex gap-2 mb-3">
-              <input id="addonTagInput" class="flex-grow p-3 border border-[#EAE3D2] rounded-xl text-sm focus:outline-none focus:border-[#943A3A]" placeholder="Add feature (e.g., Phone holder, integrated cable lines)" />
-              <button type="button" onclick="injectAddonTag()" class="bg-[#2D2A26] text-white px-5 rounded-xl font-black text-lg hover:bg-stone-800">+</button>
-            </div>
-            <div id="dynamicTagsDestinationBox" class="flex flex-wrap gap-2"></div>
-          </div>
+  const handleLogin = (e) => {
+    e.preventDefault();
+    alert(`Logged in as ${email}`);
+  };
 
-          <button type="submit" class="w-full bg-[#943A3A] hover:bg-red-800 text-white py-4 rounded-xl font-bold uppercase text-xs tracking-wider transition-colors shadow-sm">
-            Submit to Fabrication Queue
-          </button>
-        </form>
-      </div>
+  return (
+    <form onSubmit={handleLogin}>
+      <h2>Login</h2>
+      <input type="email" placeholder="Email" value={email} onChange={(e)=>setEmail(e.target.value)} />
+      <input type="password" placeholder="Password" value={password} onChange={(e)=>setPassword(e.target.value)} />
+      <button type="submit">Login</button>
+    </form>
+  );
+}
 
-      <div id="blueprintSuccessFrame" class="hidden bg-white rounded-3xl p-12 text-center border border-[#EAE3D2] shadow-sm max-w-2xl mx-auto">
-        <div class="text-emerald-600 bg-emerald-50 p-3 rounded-full text-2xl w-14 h-14 flex items-center justify-center mx-auto mb-4 font-bold">✓</div>
-        <h2 class="text-2xl font-black mb-4 uppercase">Design Confirmed</h2>
-        <p class="text-stone-600 mb-6 text-sm font-semibold">Your blueprint options have successfully integrated into the build matrix queue.</p>
-        <button onclick="revertStudioLayout()" class="bg-[#943A3A] text-white px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-wider">
-          New Design
-        </button>
-      </div>
-    </section>
+export default Login;
+import React, { useState } from 'react';
 
-    <section id="view-showcase" class="app-view max-w-6xl mx-auto p-4 py-12">
-      <h2 class="text-3xl font-black mb-10 uppercase text-center tracking-wide">Inspiration Feed</h2>
-      
-      <div class="grid md:grid-cols-2 lg:grid-cols-2 gap-8">
-        <div class="bg-white rounded-3xl overflow-hidden border border-[#EAE3D2] shadow-sm flex flex-col justify-between">
-          <div>
-            <img src="https://images.unsplash.com/photo-1595428774223-ef52624120d2?auto=format&fit=crop&w=800&q=80" class="w-full h-64 object-cover" />
-            <div class="p-6 space-y-3">
-              <h3 class="font-bold text-lg text-stone-900">Deccan 5-Tier Organiser (Ref: image_13.png)</h3>
-              <p class="text-xs text-stone-600 leading-relaxed font-semibold">Inspired by the multi-tier entryway storage seen in image_13.png. Built with matte black industrial piping supports and dark-walnut veneered plywood shelves. Perfect for heavy footwear loads.</p>
-              <div class="flex flex-wrap gap-1 pt-2">
-                <span class="bg-[#FAF7F2] border border-[#EAE3D2] text-[10px] font-bold text-stone-600 px-2.5 py-1 rounded-md uppercase">Matte Black Pipe Structure</span>
-                <span class="bg-[#FAF7F2] border border-[#EAE3D2] text-[10px] font-bold text-stone-600 px-2.5 py-1 rounded-md uppercase">Heavy-Duty Shoe Capacity</span>
-              </div>
-            </div>
-          </div>
-          <div class="p-6 pt-0">
-            <button onclick="mountBaselinePreset('Deccan 5-Tier Organiser', 'W: 90cm, D: 32cm, H: 110cm', ['Matte Black Pipe Structure', 'Heavy-Duty Shoe Capacity'])" class="w-full bg-[#F2ECE1] border border-[#EAE3D2] py-3 rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-[#EAE3D2] text-stone-800 transition-colors">
-              Configure Layout
-            </button>
-          </div>
-        </div>
+function Signup() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-        <div class="bg-white rounded-3xl overflow-hidden border border-[#EAE3D2] shadow-sm flex flex-col justify-between">
-          <div>
-            <img src="https://images.unsplash.com/photo-1530017758801-447a4c7e6822?auto=format&fit=crop&w=800&q=80" class="w-full h-64 object-cover" />
-            <div class="p-6 space-y-3">
-              <h3 class="font-bold text-lg text-stone-900">Rajpath Dining Combo (Ref: image_14.png)</h3>
-              <p class="text-xs text-stone-600 leading-relaxed font-semibold">Designed after the set in image_14.png. A solid structural dining table featuring a black powdercoated steel chassis with a crown-cut walnut plywood top, paired with a matching structural bench.</p>
-              <div class="flex flex-wrap gap-1 pt-2">
-                <span class="bg-[#FAF7F2] border border-[#EAE3D2] text-[10px] font-bold text-stone-600 px-2.5 py-1 rounded-md uppercase">Steel Frame Integrity</span>
-                <span class="bg-[#FAF7F2] border border-[#EAE3D2] text-[10px] font-bold text-stone-600 px-2.5 py-1 rounded-md uppercase">Generational Walnut Finish</span>
-              </div>
-            </div>
-          </div>
-          <div class="p-6 pt-0">
-            <button onclick="mountBaselinePreset('Rajpath Dining Combo', 'Table: 150x80x75cm, Bench: 120x35x45cm', ['Steel Frame Integrity', 'Generational Walnut Finish'])" class="w-full bg-[#F2ECE1] border border-[#EAE3D2] py-3 rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-[#EAE3D2] text-stone-800 transition-colors">
-              Configure Layout
-            </button>
-          </div>
-        </div>
+  const handleSignup = (e) => {
+    e.preventDefault();
+    alert(`Account created for ${email}`);
+  };
 
-        <div class="bg-white rounded-3xl overflow-hidden border border-[#EAE3D2] shadow-sm flex flex-col justify-between">
-          <div>
-            <img src="https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=800&q=80" class="w-full h-64 object-cover" />
-            <div class="p-6 space-y-3">
-              <h3 class="font-bold text-lg text-stone-900">Coromandel Corner Column (Ref: image_12.png)</h3>
-              <p class="text-xs text-stone-600 leading-relaxed font-semibold">The corner display column style featured in image_12.png. Welded vertical tubular steel frame supports thick plywood corner plates, ideal for showcasing decor in tight architectural spaces.</p>
-              <div class="flex flex-wrap gap-1 pt-2">
-                <span class="bg-[#FAF7F2] border border-[#EAE3D2] text-[10px] font-bold text-stone-600 px-2.5 py-1 rounded-md uppercase">Tri-point stable iron columns</span>
-                <span class="bg-[#FAF7F2] border border-[#EAE3D2] text-[10px] font-bold text-stone-600 px-2.5 py-1 rounded-md uppercase">Baltic Birch plates</span>
-              </div>
-            </div>
-          </div>
-          <div class="p-6 pt-0">
-            <button onclick="mountBaselinePreset('Coromandel Corner Column', 'W: 45cm, D: 45cm, H: 95cm', ['Tri-point stable iron columns', 'Baltic Birch plates'])" class="w-full bg-[#F2ECE1] border border-[#EAE3D2] py-3 rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-[#EAE3D2] text-stone-800 transition-colors">
-              Configure Layout
-            </button>
-          </div>
-        </div>
+  return (
+    <form onSubmit={handleSignup}>
+      <h2>Signup</h2>
+      <input type="email" placeholder="Email" value={email} onChange={(e)=>setEmail(e.target.value)} />
+      <input type="password" placeholder="Password" value={password} onChange={(e)=>setPassword(e.target.value)} />
+      <button type="submit">Signup</button>
+    </form>
+  );
+}
 
-        <div class="bg-white rounded-3xl overflow-hidden border border-[#EAE3D2] shadow-sm flex flex-col justify-between">
-          <div>
-            <img src="https://images.unsplash.com/photo-1560185007-c5ca9d2c014d?auto=format&fit=crop&w=800&q=80" class="w-full h-64 object-cover" />
-            <div class="p-6 space-y-3">
-              <h3 class="font-bold text-lg text-stone-900">Malabar Structural Bench (Ref: image_11.png)</h3>
-              <p class="text-xs text-stone-600 leading-relaxed font-semibold">Capturing the industrial slatted look from image_11.png. Brushed raw steel loop frame with thick, flush-fitted natural oak plywood slats for maximum weight bearing and minimalist aesthetic.</p>
-              <div class="flex flex-wrap gap-1 pt-2">
-                <span class="bg-[#FAF7F2] border border-[#EAE3D2] text-[10px] font-bold text-stone-600 px-2.5 py-1 rounded-md uppercase">Brushed Steel Loop Frame</span>
-                <span class="bg-[#FAF7F2] border border-[#EAE3D2] text-[10px] font-bold text-stone-600 px-2.5 py-1 rounded-md uppercase">Flush Plywood Slats</span>
-              </div>
-            </div>
-          </div>
-          <div class="p-6 pt-0">
-            <button onclick="mountBaselinePreset('Malabar Structural Bench', 'W: 130cm, D: 38cm, H: 45cm', ['Brushed Steel Loop Frame', 'Flush Plywood Slats'])" class="w-full bg-[#F2ECE1] border border-[#EAE3D2] py-3 rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-[#EAE3D2] text-stone-800 transition-colors">
-              Configure Layout
-            </button>
-          </div>
-        </div>
-      </div>
-    </section>
+export default Signup;
+import mongoose from 'mongoose';
 
-    <section id="view-profile" class="app-view max-w-2xl mx-auto p-12 text-center my-12 border border-dashed border-[#EAE3D2] bg-white rounded-3xl shadow-sm">
-      <div class="text-stone-400 text-3xl mb-2">⏳</div>
-      <p class="text-stone-600 text-sm font-semibold">No active build projects. Use the Design Pad to get started.</p>
-    </section>
+const userSchema = new mongoose.Schema({
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true }
+});
 
-  </main>
+export default mongoose.model('User', userSchema);
+import express from 'express';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import User from '../models/User.js';
 
-  <footer class="bg-[#F2ECE1] text-[#2D2A26] py-12 text-center border-t border-[#E6DEC4]">
-    <div class="max-w-6xl mx-auto px-4 flex flex-col items-center gap-4">
-      <div class="flex items-center gap-2">
-        <svg width="36" height="36" viewBox="0 0 100 100" fill="none" class="inline-block">
-          <polygon points="50,15 90,85 10,85" fill="#943A3A" stroke="#943A3A" stroke-width="2" stroke-linejoin="round" />
-          <circle cx="50" cy="46" r="7.5" fill="white" />
-        </svg>
-        <span class="font-sans font-black tracking-widest text-xl text-[#2D2A26] uppercase">AKKU</span>
-      </div>
-      <p class="text-sm text-stone-600 max-w-md font-medium">
-        Structural steel frames met with clean architectural plywood surfaces. Modern, robust, minimalist furniture built for your space.
-      </p>
-      <div class="w-12 h-[1px] bg-[#943A3A] my-2"></div>
-      <p class="text-xs text-stone-500 font-semibold">© 2026 Akku Custom Manufacturing. All rights reserved.</p>
-    </div>
-  </footer>
+const router = express.Router();
 
-  <script>
-    // Preserving requested initialization endpoints natively
-    const FirebaseSetup = {
-      appId: "akku-furniture-app",
-      initialize: function() {
-        console.log("Firebase architecture verified via app ID: " + this.appId);
-      }
-    };
-    FirebaseSetup.initialize();
+// Signup
+router.post('/signup', async (req, res) => {
+  const { email, password } = req.body;
+  const hashed = await bcrypt.hash(password, 10);
+  const user = new User({ email, password: hashed });
+  await user.save();
+  res.json({ message: 'User created' });
+});
 
-    let internalFeatureTagsArray = [];
+// Login
+router.post('/login', async (req, res) => {
+  const { email, password } = req.body;
+  const user = await User.findOne({ email });
+  if (!user) return res.status(400).json({ error: 'User not found' });
+  const valid = await bcrypt.compare(password, user.password);
+  if (!valid) return res.status(400).json({ error: 'Invalid password' });
+  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+  res.json({ token });
+});
 
-    // Navigation Systems Logic Controls
-    function switchView(targetViewId) {
-      document.querySelectorAll('.app-view').forEach(view => view.classList.remove('active'));
-      document.getElementById('view-' + targetViewId).classList.add('active');
+export default router;
+import express from 'express';
+import mongoose from 'mongoose';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import userRoutes from './routes/user.js';
 
-      document.querySelectorAll('.nav-target-btn').forEach(btn => {
-        btn.classList.remove('text-[#943A3A]', 'bg-[#F2ECE1]');
-        btn.classList.add('text-stone-700');
-      });
-      const activeNavButton = document.getElementById('nav-btn-' + targetViewId);
-      activeNavButton.classList.remove('text-stone-700');
-      activeNavButton.classList.add('text-[#943A3A]', 'bg-[#F2ECE1]');
-    }
+dotenv.config();
+const app = express();
+app.use(cors());
+app.use(express.json());
 
-    // Custom Tag Management Layout Controls
-    function injectAddonTag() {
-      const tagField = document.getElementById('addonTagInput');
-      const cleanVal = tagField.value.trim();
-      if(cleanVal && !internalFeatureTagsArray.includes(cleanVal)) {
-        internalFeatureTagsArray.push(cleanVal);
-        renderActiveTagsHTML();
-        tagField.value = '';
-      }
-    }
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log('MongoDB connected'))
+  .catch(err => console.error(err));
 
-    function removeAddonTag(targetTag) {
-      internalFeatureTagsArray = internalFeatureTagsArray.filter(t => t !== targetTag);
-      renderActiveTagsHTML();
-    }
+app.use('/api/user', userRoutes);
 
-    function renderActiveTagsHTML() {
-      const parentBox = document.getElementById('dynamicTagsDestinationBox');
-      parentBox.innerHTML = '';
-      internalFeatureTagsArray.forEach(tag => {
-        parentBox.innerHTML += `
-          <span class="bg-[#F2ECE1] text-[#943A3A] font-bold px-3 py-1.5 rounded-lg text-xs flex items-center gap-2 border border-[#EAE3D2]">
-            ${tag} 
-            <button type="button" onclick="removeAddonTag('${tag}')" class="text-stone-400 hover:text-red-900 font-bold ml-1">×</button>
-          </span>
-        `;
-      });
-    }
+app.get('/', (req, res) => res.send('Akku Furniture API running'));
 
-    // Direct Template Connection Pipeline
-    function mountBaselinePreset(templateTitle, defaultMetricDimensions, baselineTags) {
-      document.getElementById('conceptTextInput').value = `Based on template: ${templateTitle}.\nModifications required: `;
-      document.getElementById('metricDimInput').value = defaultMetricDimensions;
-      internalFeatureTagsArray = [...baselineTags];
-      renderActiveTagsHTML();
-      switchView('design');
-    }
-
-    // Form Handling Mechanisms
-    function executeBuildSubmit(event) {
-      event.preventDefault();
-      document.getElementById('blueprintFormFrame').classList.add('hidden');
-      document.getElementById('blueprintSuccessFrame').classList.remove('hidden');
-    }
-
-    function revertStudioLayout() {
-      document.getElementById('conceptTextInput').value = '';
-      document.getElementById('metricDimInput').value = '';
-      internalFeatureTagsArray = [];
-      renderActiveTagsHTML();
-      document.getElementById('blueprintSuccessFrame').classList.add('hidden');
-      document.getElementById('blueprintFormFrame').classList.remove('hidden');
-    }
-  </script>
-</body>
-</html>
+app.listen(5000, () => console.log('Server started on port 5000'));
