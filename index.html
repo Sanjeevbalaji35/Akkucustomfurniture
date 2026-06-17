@@ -21,154 +21,319 @@
     }
   </script>
 
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
     }
-    .view-section { display: none; }
-    .view-section.active { display: block; }
   </style>
 </head>
-<body class="bg-[#FAF7F2] text-[#2D2A26] min-h-screen flex flex-col justify-between selection:bg-red-50 selection:text-red-900">
+<body class="bg-[#FAF7F2] text-[#2D2A26] min-h-screen">
 
-  <nav class="bg-[#FAF7F2]/95 backdrop-blur-md border-b border-[#EAE3D2] sticky top-0 z-50">
-    <div class="max-w-6xl mx-auto px-4">
-      <div class="flex justify-between items-center h-20">
-        <div class="flex items-center gap-3 cursor-pointer" onclick="switchView('home')">
-          <svg width="40" height="40" viewBox="0 0 100 100" fill="none" class="inline-block">
-            <polygon points="50,15 90,85 10,85" fill="#943A3A" stroke="#943A3A" stroke-width="2" stroke-linejoin="round" />
-            <circle cx="50" cy="46" r="7.5" fill="white" />
-            <circle cx="37" cy="68" r="7.5" fill="white" />
-            <circle cx="63" cy="68" r="7.5" fill="white" />
-          </svg>
-          <div class="flex flex-col">
-            <span class="font-sans font-black text-2xl tracking-widest text-[#2D2A26] leading-none">AKKU</span>
-            <span class="text-[9px] uppercase tracking-widest font-bold text-[#943A3A] mt-1">Hybrid Systems</span>
-          </div>
-        </div>
-        
-        <div class="flex items-center gap-1">
-          <button onclick="switchView('home')" id="nav-home" class="nav-btn px-3 py-2 rounded-lg font-bold text-xs uppercase tracking-wider text-[#943A3A] bg-[#F2ECE1]">Home</button>
-          <button onclick="switchView('design')" id="nav-design" class="nav-btn px-3 py-2 rounded-lg font-bold text-xs uppercase tracking-wider text-stone-700">Design Pad</button>
-          <button onclick="switchView('showcase')" id="nav-showcase" class="nav-btn px-3 py-2 rounded-lg font-bold text-xs uppercase tracking-wider text-stone-700">Inspirations</button>
-          <button onclick="switchView('profile')" id="nav-profile" class="nav-btn px-3 py-2 rounded-lg font-bold text-xs uppercase tracking-wider text-stone-700">Track Order</button>
-        </div>
-      </div>
-    </div>
-  </nav>
+  <div id="root"></div>
 
-  <main class="flex-grow">
-    
-    <section id="view-home" class="view-section active animate-in fade-in duration-300">
-      <div class="relative bg-[#F5EFE6] text-[#2D2A26] overflow-hidden border-b border-[#EAE3D2]">
-        <div class="relative max-w-6xl mx-auto px-6 py-24 text-center z-10">
-          <h1 class="font-sans text-4xl sm:text-6xl font-black tracking-tight mb-6">
-            Steel Structural Strength. <br/><span class="text-[#943A3A]">Smooth Plywood Aesthetics.</span>
-          </h1>
-          <p class="text-stone-700 max-w-2xl mx-auto mb-10 font-semibold">
-            Custom steel frames married with organic plywood coverings. Robust, minimalist, built for your exact space.
-          </p>
-          <button onclick="switchView('design')" class="bg-[#943A3A] text-white px-8 py-4 rounded-xl font-bold text-xs uppercase tracking-wider shadow-sm transition-transform hover:bg-red-800">
-            Interactive Design Pad
-          </button>
-        </div>
-      </div>
-    </section>
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
 
-    <section id="view-design" class="view-section max-w-4xl mx-auto p-4 py-12">
-      <h2 class="text-3xl font-black mb-8 uppercase text-center tracking-wide">Design Pad Studio</h2>
-      
-      <div id="design-form-container">
-        <form id="blueprintForm" onsubmit="handleFormSubmit(event)" class="bg-white p-8 md:p-10 rounded-3xl border border-[#EAE3D2] shadow-sm space-y-6">
-          <div>
-            <label class="block font-bold text-xs uppercase mb-2 text-stone-700 tracking-wider">1. Describe your furniture concept</label>
-            <textarea id="descInput" required class="w-full h-32 p-4 border border-[#EAE3D2] rounded-xl text-sm focus:outline-none focus:border-[#943A3A]" placeholder="Type structural alterations, custom shapes, framing adjustments..."></textarea>
-          </div>
+    // --- Firebase Global Initializer ---
+    let auth, db;
+    try {
+      const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+      // Using compat layer to ensure smooth browser CDN execution
+      if (firebaseConfig.apiKey) {
+        firebase.initializeApp(firebaseConfig);
+        auth = firebase.auth();
+        db = firebase.firestore();
+      }
+    } catch (error) {
+      console.error("Firebase startup check:", error);
+    }
 
-          <div>
-            <label class="block font-bold text-xs uppercase mb-2 text-stone-700 tracking-wider">2. Plan Geometry Dimensions</label>
-            <input id="dimInput" required class="w-full p-4 border border-[#EAE3D2] rounded-xl text-sm focus:outline-none focus:border-[#943A3A]" placeholder="E.g., Table: 150x80x75cm, Bench: 120x35x45cm" />
-          </div>
-          
-          <div>
-            <label class="block font-bold text-xs uppercase mb-2 text-stone-700 tracking-wider">3. Custom Add-ons & Integrated Hardware</label>
-            <div class="flex gap-2 mb-3">
-              <input id="tagInput" class="flex-grow p-3 border border-[#EAE3D2] rounded-xl text-sm focus:outline-none focus:border-[#943A3A]" placeholder="Add additions (e.g., Heavy-duty pipe brackets, leveling feet)" />
-              <button type="button" onclick="addCustomTag()" class="bg-[#2D2A26] text-white px-5 rounded-xl font-black text-lg hover:bg-stone-800">+</button>
-            </div>
-            
-            <div id="tagsContainer" class="flex flex-wrap gap-2"></div>
-          </div>
+    // Dynamic Engine Icon Loader
+    function LucideIcon({ name, size = 16, className = "" }) {
+      const iconRef = useRef(null);
+      useEffect(() => {
+        if (window.lucide && iconRef.current) {
+          window.lucide.createIcons({ nodeList: [iconRef.current] });
+        }
+      }, [name]);
+      return <i ref={iconRef} data-lucide={name} style={{ width: size, height: size }} className={`inline-block ${className}`}></i>;
+    }
 
-          <button type="submit" class="w-full bg-[#943A3A] hover:bg-red-800 text-white py-4 rounded-xl font-bold uppercase text-xs tracking-wider transition-colors shadow-sm">
-            Submit to Fabrication Queue
-          </button>
-        </form>
-      </div>
+    // Full 4-Preset Catalog Matrix Verified
+    const PRESET_TEMPLATES = [
+      {
+        id: 'shoe_rack_shelf',
+        title: 'Deccan 5-Tier Organiser (Ref: image_13.png)',
+        desc: 'Inspired by the multi-tier entryway storage seen in image_13.png. Built with matte black industrial piping supports and dark-walnut veneered plywood shelves. Perfect for heavy footwear loads.',
+        dimensions: 'W: 90cm, D: 32cm, H: 110cm',
+        metalFinish: 'matte_black',
+        plywoodFace: 'crown_walnut',
+        imgUrl: 'https://images.unsplash.com/photo-1595428774223-ef52624120d2?auto=format&fit=crop&w=800&q=80',
+        category: 'Entryway & Storage',
+        features: ['Matte Black Pipe Structure', 'Heavy-Duty Shoe Capacity', 'Modern Minimalist Entryway']
+      },
+      {
+        id: 'dining_suite_bench',
+        title: 'Rajpath Dining Combo (Ref: image_14.png)',
+        desc: 'Designed after the set in image_14.png. A solid structural dining table featuring a black powdercoated steel chassis with a crown-cut walnut plywood top, paired with a matching structural bench.',
+        dimensions: 'Table: 150x80x75cm, Bench: 120x35x45cm',
+        metalFinish: 'matte_black',
+        plywoodFace: 'crown_walnut',
+        imgUrl: 'https://images.unsplash.com/photo-1530017758801-447a4c7e6822?auto=format&fit=crop&w=800&q=80',
+        category: 'Dining Sets',
+        features: ['Steel Frame Integrity', 'Generational Walnut Finish', 'Matching Storage Bench']
+      },
+      {
+        id: 'corner_shelf',
+        title: 'Coromandel Corner Column (Ref: image_12.png)',
+        desc: 'The corner display column style featured in image_12.png. Welded vertical tubular steel frame supports thick plywood corner plates, ideal for showcasing decor in tight architectural spaces.',
+        dimensions: 'W: 45cm, D: 45cm, H: 95cm',
+        metalFinish: 'matte_black',
+        plywoodFace: 'baltic_birch',
+        imgUrl: 'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=800&q=80',
+        category: 'Living Room Corner',
+        features: ['Tri-point stable iron columns', 'Baltic Birch plates', 'Compact Footprint']
+      },
+      {
+        id: 'slatted_bench',
+        title: 'Malabar Structural Bench (Ref: image_11.png)',
+        desc: 'Capturing the industrial slatted look from image_11.png. Brushed raw steel loop frame with thick, flush-fitted natural oak plywood slats for maximum weight bearing and minimalist aesthetic.',
+        dimensions: 'W: 130cm, D: 38cm, H: 45cm',
+        metalFinish: 'brushed_steel',
+        plywoodFace: 'natural_oak',
+        imgUrl: 'https://images.unsplash.com/photo-1560185007-c5ca9d2c014d?auto=format&fit=crop&w=800&q=80',
+        category: 'Benches & Outdoor',
+        features: ['Brushed Steel Loop Frame', 'Flush Plywood Slats', 'Outdoor Grade Finish']
+      }
+    ];
 
-      <div id="design-success-container" class="hidden bg-white rounded-3xl p-12 text-center border border-[#EAE3D2] shadow-sm max-w-2xl mx-auto">
-        <div class="text-emerald-600 bg-emerald-50 p-3 rounded-full text-2xl w-14 h-14 flex items-center justify-center mx-auto mb-4 font-bold">✓</div>
-        <h2 class="text-2xl font-black mb-4 uppercase">Design Confirmed</h2>
-        <p class="text-stone-600 mb-6 text-sm font-semibold">Your blueprint adjustments have been locked into the workshop build matrix queue.</p>
-        <button onclick="resetDesignForm()" class="bg-[#943A3A] text-white px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-wider">
-          Create Another Configuration
-        </button>
-      </div>
-    </section>
+    function AkkuLogo({ size = 32 }) {
+      return (
+        <svg width={size} height={size} viewBox="0 0 100 100" fill="none" className="inline-block">
+          <polygon points="50,15 90,85 10,85" fill="#943A3A" stroke="#943A3A" strokeWidth="2" strokeLinejoin="round" />
+          <circle cx="50" cy="46" r="7.5" fill="white" />
+          <circle cx="37" cy="68" r="7.5" fill="white" />
+          <circle cx="63" cy="68" r="7.5" fill="white" />
+        </svg>
+      );
+    }
 
-    <section id="view-showcase" class="view-section max-w-6xl mx-auto p-4 py-12">
-      <h2 class="text-3xl font-black mb-2 uppercase text-center tracking-wide">Inspiration Feed</h2>
-      <p class="text-center text-stone-500 font-semibold text-sm mb-10">Select a structural baseline to launch customize matrix presets</p>
-      
-      <div class="grid md:grid-cols-2 lg:grid-cols-2 gap-8">
-        <div class="bg-white rounded-3xl overflow-hidden border border-[#EAE3D2] shadow-sm flex flex-col justify-between">
-          <div>
-            <img src="https://images.unsplash.com/photo-1595428774223-ef52624120d2?auto=format&fit=crop&w=800&q=80" class="w-full h-64 object-cover" />
-            <div class="p-6 space-y-3">
-              <h3 class="font-extrabold text-lg text-stone-900">Deccan 5-Tier Organiser (Ref: image_13.png)</h3>
-              <p class="text-xs text-stone-600 leading-relaxed font-medium">Inspired by the multi-tier entryway storage seen in image_13.png. Built with matte black industrial piping supports and dark-walnut veneered plywood shelves. Perfect for heavy footwear loads.</p>
-              <div class="flex flex-wrap gap-1 pt-2">
-                <span class="bg-[#FAF7F2] border border-[#EAE3D2] text-[10px] font-bold text-stone-600 px-2.5 py-1 rounded-md uppercase">Matte Black Pipe</span>
-                <span class="bg-[#FAF7F2] border border-[#EAE3D2] text-[10px] font-bold text-stone-600 px-2.5 py-1 rounded-md uppercase">Heavy Capacity</span>
+    function App() {
+      const [user, setUser] = useState(null);
+      const [currentView, setCurrentView] = useState('home');
+
+      useEffect(() => {
+        if (!auth) return;
+        const startupAuth = async () => {
+          try {
+            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+              await auth.signInWithCustomToken(__initial_auth_token);
+            } else {
+              await auth.signInAnonymously();
+            }
+          } catch (e) { console.error("Identity initialization bypass:", e); }
+        };
+        startupAuth();
+        return auth.onAuthStateChanged(u => setUser(u));
+      }, []);
+
+      return (
+        <div className="min-h-screen bg-[#FAF7F2] text-[#2D2A26] flex flex-col justify-between selection:bg-red-50 selection:text-red-900">
+          <nav className="bg-[#FAF7F2]/95 backdrop-blur-md border-b border-[#EAE3D2] sticky top-0 z-50">
+            <div className="max-w-6xl mx-auto px-4 h-20 flex justify-between items-center">
+              <div class="flex items-center gap-3 cursor-pointer" onClick={() => setCurrentView('home')}>
+                <AkkuLogo size={40} />
+                <div class="flex flex-col">
+                  <span class="font-sans font-black text-2xl tracking-widest leading-none">AKKU</span>
+                  <span class="text-[9px] uppercase tracking-widest font-bold text-[#943A3A] mt-1">Hybrid Systems</span>
+                </div>
+              </div>
+              <div className="flex items-center gap-1">
+                <button onClick={() => setCurrentView('home')} class={`flex items-center gap-1.5 px-3 py-2 rounded-lg font-bold text-xs uppercase ${currentView === 'home' ? 'text-[#943A3A] bg-[#F2ECE1]' : 'text-stone-700'}`}>
+                  <LucideIcon name="home" size={14} /> <span class="hidden sm:inline">Home</span>
+                </button>
+                <button onClick={() => setCurrentView('design')} class={`flex items-center gap-1.5 px-3 py-2 rounded-lg font-bold text-xs uppercase ${currentView === 'design' ? 'text-[#943A3A] bg-[#F2ECE1]' : 'text-stone-700'}`}>
+                  <LucideIcon name="pen-tool" size={14} /> <span class="hidden sm:inline">Design Pad</span>
+                </button>
+                <button onClick={() => setCurrentView('showcase')} class={`flex items-center gap-1.5 px-3 py-2 rounded-lg font-bold text-xs uppercase ${currentView === 'showcase' ? 'text-[#943A3A] bg-[#F2ECE1]' : 'text-stone-700'}`}>
+                  <LucideIcon name="sparkles" size={14} /> <span class="hidden sm:inline">Inspirations</span>
+                </button>
+                <button onClick={() => setCurrentView('profile')} class={`flex items-center gap-1.5 px-3 py-2 rounded-lg font-bold text-xs uppercase ${currentView === 'profile' ? 'text-[#943A3A] bg-[#F2ECE1]' : 'text-stone-700'}`}>
+                  <LucideIcon name="user" size={14} /> <span class="hidden sm:inline">Track Order</span>
+                </button>
               </div>
             </div>
-          </div>
-          <div class="p-6 pt-0">
-            <button onclick="loadTemplatePreset('Deccan 5-Tier Organiser', 'W: 90cm, D: 32cm, H: 110cm', ['Matte Black Pipe Support', 'Heavy Footwear Capacity'])" class="w-full bg-[#F2ECE1] border border-[#EAE3D2] py-3 rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-[#EAE3D2] text-stone-800 transition-colors">
-              Configure This Layout
-            </button>
-          </div>
-        </div>
+          </nav>
 
-        <div class="bg-white rounded-3xl overflow-hidden border border-[#EAE3D2] shadow-sm flex flex-col justify-between">
-          <div>
-            <img src="https://images.unsplash.com/photo-1530017758801-447a4c7e6822?auto=format&fit=crop&w=800&q=80" class="w-full h-64 object-cover" />
-            <div class="p-6 space-y-3">
-              <h3 class="font-extrabold text-lg text-stone-900">Rajpath Dining Combo (Ref: image_14.png)</h3>
-              <p class="text-xs text-stone-600 leading-relaxed font-medium">Designed after the set in image_14.png. A solid structural dining table featuring a black powdercoated steel chassis with a crown-cut walnut plywood top, paired with a matching structural bench.</p>
-              <div class="flex flex-wrap gap-1 pt-2">
-                <span class="bg-[#FAF7F2] border border-[#EAE3D2] text-[10px] font-bold text-stone-600 px-2.5 py-1 rounded-md uppercase">Steel Frame Integrity</span>
-                <span class="bg-[#FAF7F2] border border-[#EAE3D2] text-[10px] font-bold text-stone-600 px-2.5 py-1 rounded-md uppercase">Walnut Finish</span>
+          <main className="flex-grow">
+            {currentView === 'home' && <HomeView setCurrentView={setCurrentView} />}
+            {currentView === 'design' && (
+              <DesignStudio 
+                selectedTemplate={selectedTemplate}
+                clearSelectedTemplate={() => setSelectedTemplate(null)}
+              />
+            )}
+            {currentView === 'showcase' && <ShowcaseView onLoadTemplate={(t) => { setSelectedTemplate(t); setCurrentView('design'); }} />}
+            {currentView === 'profile' && <ProfileView />}
+          </main>
+
+          <footer className="bg-[#F2ECE1] text-[#2D2A26] py-12 text-center border-t border-[#E6DEC4]">
+            <div className="max-w-6xl mx-auto px-4 flex flex-col items-center gap-4">
+              <AkkuLogo size={36} />
+              <p className="text-sm text-stone-600 max-w-md font-medium">Structural steel frames paired with premium cladded architectural plywood. Built for lifetimes.</p>
+              <p className="text-xs text-stone-500 font-semibold">© 2026 Akku Custom Manufacturing. All rights reserved.</p>
+            </div>
+          </footer>
+        </div>
+      );
+    }
+
+    function HomeView({ setCurrentView }) {
+      return (
+        <div className="animate-in fade-in duration-300">
+          <section className="bg-[#F5EFE6] py-24 text-center border-b border-[#EAE3D2] px-4">
+            <h1 className="text-4xl sm:text-6xl font-black tracking-tight mb-6 leading-tight">Steel Structural Strength. <br/><span className="text-[#943A3A]">Smooth Plywood Aesthetics.</span></h1>
+            <p className="text-stone-700 max-w-2xl mx-auto mb-10 font-semibold">Custom structural skeletons married with flush-fitted plywood faces. Tailored perfectly to your dimension needs.</p>
+            <button onClick={() => setCurrentView('design')} className="bg-[#943A3A] text-white px-8 py-4 rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-red-800 transition-colors">Launch Design Pad</button>
+          </section>
+        </div>
+      );
+    }
+
+    function DesignStudio({ selectedTemplate, clearSelectedTemplate }) {
+      const [description, setDescription] = useState('');
+      const [dimensions, setDimensions] = useState('');
+      const [customFeatures, setCustomFeatures] = useState([]);
+      const [currentFeatureInput, setCurrentFeatureInput] = useState('');
+      const [isSubmitting, setIsSubmitting] = useState(false);
+      const [submitted, setSubmitted] = useState(false);
+
+      useEffect(() => {
+        if (selectedTemplate) {
+          setDescription(`Based on template: ${selectedTemplate.title}.\nModifications required: `);
+          setDimensions(selectedTemplate.dimensions);
+          setCustomFeatures(selectedTemplate.features || []);
+          clearSelectedTemplate();
+        }
+      }, [selectedTemplate]);
+
+      const handleAddFeatureTag = () => {
+        const val = currentFeatureInput.trim();
+        if (val && !customFeatures.includes(val)) {
+          setCustomFeatures([...customFeatures, val]);
+          setCurrentFeatureInput('');
+        }
+      };
+
+      const handleSubmit = async (e) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+        if (db) {
+          try {
+            await db.collection('orders').add({
+              description, dimensions, customFeatures, timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
+          } catch (err) { console.error("Firestore push bypassed:", err); }
+        }
+        setTimeout(() => { setIsSubmitting(false); setSubmitted(true); }, 1000);
+      };
+
+      if (submitted) {
+        return (
+          <div className="max-w-2xl mx-auto p-12 text-center my-12 bg-white rounded-3xl border border-[#EAE3D2]">
+            <LucideIcon name="check" size={48} className="text-emerald-600 bg-emerald-50 p-2 rounded-full mb-4" />
+            <h2 className="text-2xl font-black mb-4 uppercase">Design Saved</h2>
+            <button onClick={() => { setSubmitted(false); setDescription(''); setDimensions(''); setCustomFeatures([]); }} className="bg-[#943A3A] text-white px-6 py-3 rounded-xl font-bold text-xs uppercase">Configure New Build</button>
+          </div>
+        );
+      }
+
+      return (
+        <div className="max-w-4xl mx-auto p-4 py-12">
+          <form onSubmit={handleSubmit} className="bg-white p-8 md:p-10 rounded-3xl border border-[#EAE3D2] space-y-6 shadow-sm">
+            <h2 className="text-xl font-black uppercase tracking-wide border-b pb-3 text-stone-800">Workspace Specification Parameters</h2>
+            <div>
+              <label className="block font-bold text-xs uppercase mb-2 text-stone-700">1. Conceptual Form Adjustments</label>
+              <textarea required className="w-full h-32 p-4 border rounded-xl text-sm focus:outline-none focus:border-[#943A3A]" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Describe configuration blueprints or special framing request details..." />
+            </div>
+            <div>
+              <label className="block font-bold text-xs uppercase mb-2 text-stone-700">2. Metric Plan Dimensions</label>
+              <input required className="w-full p-4 border rounded-xl text-sm focus:outline-none focus:border-[#943A3A]" value={dimensions} onChange={(e) => setDimensions(e.target.value)} placeholder="E.g., W: 90cm, D: 32cm, H: 110cm" />
+            </div>
+            <div>
+              <label className="block font-bold text-xs uppercase mb-2 text-stone-700">3. Functional Add-ons & Utilities</label>
+              <div className="flex gap-2 mb-3">
+                <input className="flex-grow p-3 border rounded-xl text-sm focus:outline-none" value={currentFeatureInput} onChange={(e) => setCurrentFeatureInput(e.target.value)} placeholder="Type utility option (e.g., Leveling tracks, custom utility nodes)" onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleAddFeatureTag(); } }} />
+                <button type="button" onClick={handleAddFeatureTag} className="bg-[#2D2A26] text-white px-4 rounded-xl"><LucideIcon name="plus-circle" size={18} /></button>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {customFeatures.map(feat => (
+                  <span key={feat} className="bg-[#F2ECE1] text-[#943A3A] font-bold px-3 py-1.5 rounded-lg text-xs flex items-center gap-1.5 border border-[#EAE3D2]">
+                    {feat} <button type="button" onClick={() => setCustomFeatures(customFeatures.filter(f => f !== feat))} className="text-stone-400 font-bold hover:text-[#943A3A]">×</button>
+                  </span>
+                ))}
               </div>
             </div>
-          </div>
-          <div class="p-6 pt-0">
-            <button onclick="loadTemplatePreset('Rajpath Dining Combo', 'Table: 150x80x75cm, Bench: 120x35x45cm', ['Steel Frame Integrity', 'Generational Walnut Finish'])" class="w-full bg-[#F2ECE1] border border-[#EAE3D2] py-3 rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-[#EAE3D2] text-stone-800 transition-colors">
-              Configure This Layout
+            <button type="submit" disabled={isSubmitting} className="w-full bg-[#943A3A] hover:bg-red-800 text-white py-4 rounded-xl font-bold uppercase text-xs tracking-wider">
+              {isSubmitting ? 'Transmitting Data Array...' : 'Submit to Workshop Build Queue'}
             </button>
+          </form>
+        </div>
+      );
+    }
+
+    function ShowcaseView({ onLoadTemplate }) {
+      return (
+        <div className="max-w-6xl mx-auto p-4 py-12">
+          <h2 className="text-3xl font-black mb-2 uppercase text-center">Inspiration Catalog</h2>
+          <p className="text-center text-stone-500 font-semibold text-sm mb-10">Choose a design variant layout baseline to import specs directly</p>
+          <div className="grid md:grid-cols-2 gap-8">
+            {PRESET_TEMPLATES.map(post => (
+              <div key={post.id} className="bg-white rounded-3xl overflow-hidden border border-[#EAE3D2] flex flex-col justify-between shadow-sm">
+                <div>
+                  <img src={post.imgUrl} alt={post.title} className="w-full h-64 object-cover" />
+                  <div className="p-6 space-y-3">
+                    <h3 className="font-extrabold text-lg text-stone-900">{post.title}</h3>
+                    <p className="text-xs text-stone-600 leading-relaxed font-medium">{post.desc}</p>
+                    <div className="flex flex-wrap gap-1 pt-1">
+                      {post.features.map(f => (
+                        <span key={f} className="bg-[#FAF7F2] border border-[#EAE3D2] text-[10px] font-bold text-stone-600 px-2.5 py-1 rounded-md uppercase">{f}</span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <div className="p-6 pt-0">
+                  <button onClick={() => onLoadTemplate(post)} className="w-full bg-[#F2ECE1] border border-[#EAE3D2] py-3 rounded-xl font-bold text-xs uppercase tracking-wider text-stone-800 hover:bg-[#EAE3D2]">Configure This Layout</button>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
-      </div>
-    </section>
+      );
+    }
 
-    <section id="view-profile" class="view-section max-w-2xl mx-auto p-12 text-center my-12 border border-dashed border-[#EAE3D2] bg-white rounded-3xl shadow-sm">
-      <div class="text-stone-400 text-3xl mb-2">⏳</div>
-      <p class="text-stone-600 text-sm font-semibold">No active build projects. Use the Design Pad to compile specifications.</p>
-    </section>
+    function ProfileView() {
+      return (
+        <div className="max-w-2xl mx-auto p-12 text-center my-12 border border-dashed border-[#EAE3D2] bg-white rounded-3xl">
+          <LucideIcon name="clock" size={32} className="mx-auto text-[#943A3A] mb-3" />
+          <p className="text-stone-600 text-sm font-semibold">No active build matrices mapped yet. Use the Design Pad to get started.</p>
+        </div>
+      );
+    }
 
-  </main>
-
-  <footer class="bg-[#F2ECE1] text-[#2D2A26] py-12 text-center border-t border-[#E6DEC4]">
-    <div class="max-w-6xl mx-auto px-4 flex flex-col items-center gap-4">
-      <div class
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>
